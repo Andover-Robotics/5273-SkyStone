@@ -1,0 +1,44 @@
+From 3607c61009b3c9a03348217e41d2bfb9aee8b0e3 Mon Sep 17 00:00:00 2001
+From: Michael Peng <michael@mcmoo.org>
+Date: Fri, 4 Oct 2019 22:55:42 -0400
+Subject: [PATCH] Attach ARC-Core and adjust versioning
+
+---
+ build.common.gradle | 6 +++---
+ settings.gradle     | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/build.common.gradle b/build.common.gradle
+index b2fd3ea..53bf23d 100644
+--- a/build.common.gradle
++++ b/build.common.gradle
+@@ -38,7 +38,7 @@ android {
+ 
+     defaultConfig {
+         applicationId 'com.qualcomm.ftcrobotcontroller'
+-        minSdkVersion 19
++        minSdkVersion 24
+         targetSdkVersion 26
+         multiDexEnabled false
+ 
+@@ -84,8 +84,8 @@ android {
+     }
+ 
+     compileOptions {
+-        sourceCompatibility JavaVersion.VERSION_1_7
+-        targetCompatibility JavaVersion.VERSION_1_7
++        sourceCompatibility JavaVersion.VERSION_1_8
++        targetCompatibility JavaVersion.VERSION_1_8
+     }
+ 
+     sourceSets.main {
+diff --git a/settings.gradle b/settings.gradle
+index 7c3ea67..42feb12 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -1 +1 @@
+-include ':RobotCore', ':Blocks', ':RobotServer', ':FtcRobotController', ':FtcCommon', ':Hardware', ':Inspection', ':TeamCode', ':OpenRC'
++include ':RobotCore', ':Blocks', ':RobotServer', ':FtcRobotController', ':FtcCommon', ':Hardware', ':Inspection', ':ARC-Core', ':TeamCode', ':OpenRC'
+-- 
+2.21.0.windows.1
+
