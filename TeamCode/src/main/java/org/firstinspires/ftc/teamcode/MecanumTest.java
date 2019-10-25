@@ -38,10 +38,10 @@ public class MecanumTest extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBR = hardwareMap.dcMotor.get("motorBR");
 
-        motorFL.setDirection(Direction.REVERSE);
-        motorBL.setDirection(Direction.REVERSE);
+        motorFR.setDirection(Direction.REVERSE);
+        motorBR.setDirection(Direction.REVERSE);
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, 63, 5200);
-        mecanumDrive.setDefaultDrivePower(0.5);
+        mecanumDrive.setDefaultDrivePower(0.25);
     }
 }
