@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import android.os.Environment;
 
+import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
 
@@ -44,12 +47,27 @@ public class SkystoneIdentification extends LinearOpMode {
 
     private float robotX = 0, robotY = 0, robotAngle = 0;
 
+    private MecanumDrive mecanumDrive;
+    private DcMotor motorFL, motorFR, motorBL, motorBR;
+
     public void runOpMode() throws InterruptedException {
         setupVuforia();
 
         // We don't know where the robot is, so set it to the origin
         // If we don't include this, it would be null, which would cause errors later on
         lastKnownLocation = originMatrix();
+
+        motorFL = hardwareMap.dcMotor.get("motorFL");
+        motorFR = hardwareMap.dcMotor.get("motorFR");
+        motorBL = hardwareMap.dcMotor.get("motorBL");
+        motorBR = hardwareMap.dcMotor.get("motorBR");
+
+
+        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, 63, 5200);
+        mecanumDrive.setDefaultDrivePower(0.75);
 
         telemetry.addLine("Ready!");
         telemetry.update();
@@ -58,6 +76,8 @@ public class SkystoneIdentification extends LinearOpMode {
 
         // Start tracking the targets
         visionTargets.activate();
+
+        mecanumDrive.setMovementAndRotation(0.5, 0);
 
         while (opModeIsActive()) {
             for (VuforiaTrackable trackable : allTrackables) {
@@ -86,6 +106,9 @@ public class SkystoneIdentification extends LinearOpMode {
 
             // Send telemetry and idle to let hardware catch up
             telemetry.update();
+            if (robotY >= allTrackables.get(9).getLocation().getData()[1]) {
+                mecanumDrive.stop();
+            }
             idle();
         }
     }
@@ -130,7 +153,7 @@ public class SkystoneIdentification extends LinearOpMode {
 
 
         // Set phone location on robot (from center with screen facing up)
-        phoneLocation = createMatrix(0, 0, 0, 90, 0, 0);
+        phoneLocation = createMatrix(-6 * mmPerInch, -3, (4 + 2.85) * mmPerInch, -90, 0, -90);
 
         // Initialize the VuforiaTrackable objects and stores them in allTrackables
         allTrackables = new ArrayList<>();
@@ -163,6 +186,13 @@ public class SkystoneIdentification extends LinearOpMode {
                 multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
     }
+
+    private OpenGLMatrix createMatrix(double x, double y, double z, double u, double v, double w) {
+        return OpenGLMatrix.translation((float) x, (float) y, (float) z).
+                multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, (float) u, (float) v, (float) w));
+    }
+
 
     // Creates a matrix with 0 for all values
     // On the field, this represents the bottom left corner of the field from the audience's view
