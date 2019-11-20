@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.andoverrobotics.core.utilities.Coordinate;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "TeleOp", group = "Test")
-public class MecanumTestTeleOp extends OpMode {
+public class  MecanumTestTeleOp extends OpMode {
 
     private MecanumDrive mecanumDrive;
     private DcMotor motorFL, motorFR, motorBL, motorBR;
@@ -24,7 +24,6 @@ public class MecanumTestTeleOp extends OpMode {
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, 63, 5200);
-        mecanumDrive.setDefaultDrivePower(0.75);
     }
 
     @Override

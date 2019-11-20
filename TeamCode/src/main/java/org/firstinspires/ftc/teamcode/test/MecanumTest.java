@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -39,11 +39,10 @@ public class MecanumTest extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBR = hardwareMap.dcMotor.get("motorBR");
 
-        ((DcMotorEx) motorFL).setTargetPositionTolerance(10);
-        ((DcMotorEx) motorFR).setTargetPositionTolerance(10);
-        ((DcMotorEx) motorBL).setTargetPositionTolerance(10);
-        ((DcMotorEx) motorBR).setTargetPositionTolerance(10
-        );
+        motorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         motorFR.setDirection(Direction.REVERSE);
         motorBR.setDirection(Direction.REVERSE);
