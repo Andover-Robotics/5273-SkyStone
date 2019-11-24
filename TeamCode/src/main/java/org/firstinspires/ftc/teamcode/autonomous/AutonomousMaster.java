@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Global;
+
 public class AutonomousMaster extends LinearOpMode {
 
     protected MecanumDrive mecanumDrive;
@@ -38,7 +40,7 @@ public class AutonomousMaster extends LinearOpMode {
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, 63, 5200);
+        mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, Global.TICKS_PER_INCH, Global.TICKS_PER_360);
     }
 
     // Waits for the OpMode to be run while sending messages between the phones
