@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-@TeleOp(name = "Intake Test TeleOp", group = "Tesr")
+@TeleOp(name = "Intake Test TeleOp", group = "Test")
 public class IntakeTestTeleOp extends OpMode {
 
     private CRServo left, right;

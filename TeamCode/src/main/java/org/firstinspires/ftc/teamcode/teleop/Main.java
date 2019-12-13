@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Global;
+import org.firstinspires.ftc.teamcode.GlobalConfig;
 
 @TeleOp(name = "Main TeleOp", group = "A") // Group is A to ensure this is at the top of the list
 public class Main extends OpMode {
@@ -46,7 +46,7 @@ public class Main extends OpMode {
         foundationServo = hardwareMap.servo.get("foundationMover");
         foundationServo.setPosition(0.15); // Reset position
 
-        mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, Global.TICKS_PER_INCH, Global.TICKS_PER_360);
+        mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
     }
 
     @Override
@@ -77,6 +77,16 @@ public class Main extends OpMode {
             intakeServoPower = -gamepad2.left_trigger;
         if (gamepad2.right_trigger > 0)
             intakeServoPower = gamepad2.right_trigger;
+
+        intakeServoLeft.setPower(intakeServoPower);
+        intakeServoRight.setPower(intakeServoPower);
+
+        // ROTATE STONES
+        // Left and right d-pad spins servos on intake both the same way to rotate stones
+        if(gamepad2.dpad_left)
+            intakeServoPower = 0.5;
+        if(gamepad2.dpad_right)
+            intakeServoPower = -0.5;
 
         intakeServoLeft.setPower(intakeServoPower);
         intakeServoRight.setPower(intakeServoPower);

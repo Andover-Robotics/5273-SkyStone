@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-public final class Global {
+public final class GlobalConfig {
     // Unit conversions
     public final static double MM_PER_INCH = 25.4, CM_PER_INCH = 2.54;
 
