@@ -47,6 +47,9 @@ public class Main extends OpMode {
         foundationServo.setPosition(0.15); // Reset position
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
+
+        motorSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -101,11 +104,7 @@ public class Main extends OpMode {
             else
                 liftPower = 0.6;
         } else if (gamepad2.left_stick_y != 0) {
-            // Faster
-            if (gamepad2.left_stick_y > 0)
-                liftPower = -0.8;
-            else
-                liftPower = 0.8;
+            liftPower = gamepad2.left_stick_y;
         }
 
         motorSlideLeft.setPower(liftPower);
