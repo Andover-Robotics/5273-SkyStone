@@ -104,7 +104,7 @@ public class Main extends OpMode {
             else
                 liftPower = 0.6;
         } else if (gamepad2.left_stick_y != 0) {
-            liftPower = - 0.2 * gamepad2.left_stick_y;
+            liftPower = - 0.05 * gamepad2.left_stick_y;
         }
 
         motorSlideLeft.setPower(liftPower);
