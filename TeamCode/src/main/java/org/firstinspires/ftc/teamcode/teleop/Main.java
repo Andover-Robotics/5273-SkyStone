@@ -11,14 +11,63 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.GlobalConfig;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 @TeleOp(name = "Main TeleOp", group = "A") // Group is A to ensure this is at the top of the list
 public class Main extends OpMode {
     private Servo foundationServo;
     private MecanumDrive mecanumDrive;
     private CRServo intakeServoLeft, intakeServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
-    private boolean isDriveSlowMode = false;
     private final double SLOW_MODE = 0.3;
+
+    private Future<?> moveLiftMotor;
+    private ExecutorService asyncExecutor = Executors.newSingleThreadExecutor();
+
+    private Runnable moveLift = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                int position = motorSlideRight.getCurrentPosition();
+                boolean isMovingDown = gamepad2.b;
+
+                if (position == 0 && !isMovingDown)
+                    moveSlidesToStage(1);
+
+                checkForInterrupt();
+            } catch (InterruptedException e) {
+            }
+        }
+
+        private void moveSlidesToStage(int stage) throws InterruptedException {
+            double radiansPerStage = (GlobalConfig.LIFE_STAGE_HEIGHT_IN / 3) / (GlobalConfig.LIFT_PULLEY_RADIUS_MM / GlobalConfig.MM_PER_INCH);
+            double ticksPerRadian = GlobalConfig.TICKS_PER_360 * 180 / Math.PI;
+            double ticksPerStage = ticksPerRadian * radiansPerStage;
+
+            double finalTicks = ticksPerStage * stage;
+            int finalTicksInt = (int) Math.round(finalTicks);
+
+            motorSlideLeft.setTargetPosition(finalTicksInt);
+            motorSlideRight.setTargetPosition(finalTicksInt);
+
+            motorSlideLeft.setPower(SLOW_MODE);
+            motorSlideRight.setPower(SLOW_MODE);
+
+            while(motorSlideLeft.isBusy() || motorSlideRight.isBusy()) {
+                telemetry.addData("Left Position", motorSlideLeft.getCurrentPosition());
+                telemetry.addData("Left Target", motorSlideLeft.getTargetPosition());
+                telemetry.addData("Right Position", motorSlideRight.getCurrentPosition());
+                telemetry.addData("Right Target", motorSlideRight.getTargetPosition());
+                telemetry.update();
+                checkForInterrupt();
+            }
+
+            motorSlideLeft.setPower(0);
+            motorSlideRight.setPower(0);
+        }
+    };
 
     @Override
     public void init() {
@@ -33,23 +82,21 @@ public class Main extends OpMode {
         motorSlideLeft = hardwareMap.dcMotor.get("liftLeft");
         motorSlideRight = hardwareMap.dcMotor.get("liftRight");
 
-        motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorSlideRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeServoLeft = hardwareMap.crservo.get("intakeLeft");
         intakeServoRight = hardwareMap.crservo.get("intakeRight");
 
-        intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
         foundationServo = hardwareMap.servo.get("foundationMover");
         foundationServo.setPosition(0.15); // Reset position
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
 
-        motorSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
@@ -57,22 +104,15 @@ public class Main extends OpMode {
         // MOVEMENT (DRIVING/STRAFING AND ROTATION
         double strafe_x = -gamepad1.left_stick_x, strafe_y = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x;
 
-        if (isDriveSlowMode) {
-            strafe_x /= 3;
-            strafe_y /= 3;
-            rotate_power /= 3;
-        }
-
         // SLOW MODE STRAFE WITH D-PAD
-        if(gamepad1.dpad_up) strafe_y = -SLOW_MODE;
-        if(gamepad1.dpad_right) strafe_x = -SLOW_MODE;
-        if(gamepad1.dpad_down) strafe_y = SLOW_MODE;
-        if(gamepad1.dpad_left) strafe_x = SLOW_MODE;
+        if (gamepad1.dpad_up) strafe_y = -SLOW_MODE;
+        if (gamepad1.dpad_right) strafe_x = -SLOW_MODE;
+        if (gamepad1.dpad_down) strafe_y = SLOW_MODE;
+        if (gamepad1.dpad_left) strafe_x = SLOW_MODE;
 
         // SLOW MODE ROTATION WITH X AND B BUTTONS
-
-        if(gamepad1.b) rotate_power = -SLOW_MODE;
-        if(gamepad1.x) rotate_power = SLOW_MODE;
+        if (gamepad1.b) rotate_power = -SLOW_MODE;
+        if (gamepad1.x) rotate_power = SLOW_MODE;
 
         Coordinate strafe = Coordinate.fromXY(strafe_x, strafe_y);
         mecanumDrive.setStrafe(strafe);
@@ -87,50 +127,36 @@ public class Main extends OpMode {
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
 
-        if (gamepad2.left_trigger > 0)
-            intakeServoPower = -gamepad2.left_trigger;
-        if (gamepad2.right_trigger > 0)
-            intakeServoPower = gamepad2.right_trigger;
-
-        intakeServoLeft.setPower(intakeServoPower);
-        intakeServoRight.setPower(intakeServoPower);
-
-        // ROTATE STONES
-        // Left and right d-pad spins servos on intake both the same way to rotate stones
         if (gamepad2.dpad_left)
-            intakeServoPower = 0.5;
-        if (gamepad2.dpad_right)
-            intakeServoPower = -0.5;
+            intakeServoPower = -1;
+        else if (gamepad2.dpad_right)
+            intakeServoPower = 1;
 
         intakeServoLeft.setPower(intakeServoPower);
         intakeServoRight.setPower(intakeServoPower);
 
-        // SLIDES
-        double liftPower = 0;
+        if (intakeServoPower == 0) {
+            // ROTATE STONES
+            // Left and right d-pad spins servos on intake both the same way to rotate stones
+            if (gamepad2.right_trigger > 0)
+                intakeServoPower = gamepad2.right_trigger;
+            else if (gamepad2.left_trigger > 0)
+                intakeServoPower = -gamepad2.left_trigger;
 
-        // RIGHT STICK - FINE TUNE ADJUSTMENTS
-        // LEFT STICK - NORMAL ADJUSTMENTS
-        // SLOWER GOING DOWN (SMALLER MULTIPLIER) TO ACCOUNT FOR ASSISTING FORCE OF GRAVITY
-        if (gamepad2.right_stick_y > 0) {
-            liftPower = 0.15 * gamepad2.right_stick_y;
-        } else if (gamepad2.right_stick_y < 0) {
-            liftPower = 0.35 * gamepad2.right_stick_y;
-        } else if (gamepad2.left_stick_y > 0) {
-            liftPower = 0.2 * gamepad2.left_stick_y;
-        } else if (gamepad2.left_stick_y < 0) {
-            liftPower = 0.5 * gamepad2.left_stick_y;
+            intakeServoLeft.setPower(intakeServoPower);
+            intakeServoRight.setPower(-intakeServoPower);
         }
 
-        motorSlideLeft.setPower(liftPower);
-        motorSlideRight.setPower(liftPower);
+        // SLIDES
+        if (gamepad2.a || gamepad2.y) {
+            if (moveLiftMotor == null || moveLiftMotor.isDone()) {
+                asyncExecutor.submit(moveLift);
+            }
+        }
+    }
 
-        if (gamepad1.a)
-            isDriveSlowMode = !isDriveSlowMode;
-
-        telemetry.addData("Slow Mode", isDriveSlowMode);
-        telemetry.addData("Move Coordinate X", strafe_x);
-        telemetry.addData("Move Coordinate Y", strafe_y);
-        telemetry.addData("Rotation Power", rotate_power);
-        telemetry.update();
+    private void checkForInterrupt() throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
     }
 }
