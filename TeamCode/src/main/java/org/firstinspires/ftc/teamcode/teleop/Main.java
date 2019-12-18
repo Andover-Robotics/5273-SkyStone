@@ -13,12 +13,12 @@ import org.firstinspires.ftc.teamcode.GlobalConfig;
 
 @TeleOp(name = "Main TeleOp", group = "A") // Group is A to ensure this is at the top of the list
 public class Main extends OpMode {
-
     private Servo foundationServo;
     private MecanumDrive mecanumDrive;
     private CRServo intakeServoLeft, intakeServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
     private boolean isDriveSlowMode = false;
+    private final double SLOW_MODE = 0.3;
 
     @Override
     public void init() {
@@ -63,6 +63,17 @@ public class Main extends OpMode {
             rotate_power /= 3;
         }
 
+        // SLOW MODE STRAFE WITH D-PAD
+        if(gamepad1.dpad_up) strafe_y = -SLOW_MODE;
+        if(gamepad1.dpad_right) strafe_x = -SLOW_MODE;
+        if(gamepad1.dpad_down) strafe_y = SLOW_MODE;
+        if(gamepad1.dpad_left) strafe_x = SLOW_MODE;
+
+        // SLOW MODE ROTATION WITH X AND B BUTTONS
+
+        if(gamepad1.b) rotate_power = -SLOW_MODE;
+        if(gamepad1.x) rotate_power = SLOW_MODE;
+
         Coordinate strafe = Coordinate.fromXY(strafe_x, strafe_y);
         mecanumDrive.setStrafe(strafe);
         mecanumDrive.setRotationPower(rotate_power);
@@ -86,9 +97,9 @@ public class Main extends OpMode {
 
         // ROTATE STONES
         // Left and right d-pad spins servos on intake both the same way to rotate stones
-        if(gamepad2.dpad_left)
+        if (gamepad2.dpad_left)
             intakeServoPower = 0.5;
-        if(gamepad2.dpad_right)
+        if (gamepad2.dpad_right)
             intakeServoPower = -0.5;
 
         intakeServoLeft.setPower(intakeServoPower);
@@ -97,14 +108,17 @@ public class Main extends OpMode {
         // SLIDES
         double liftPower = 0;
 
-        if (gamepad2.right_stick_y != 0) {
-            // Slower
-            if (gamepad2.right_stick_y > 0)
-                liftPower = -0.6;
-            else
-                liftPower = 0.6;
-        } else if (gamepad2.left_stick_y != 0) {
-            liftPower = - 0.1 * gamepad2.left_stick_y;
+        // RIGHT STICK - FINE TUNE ADJUSTMENTS
+        // LEFT STICK - NORMAL ADJUSTMENTS
+        // SLOWER GOING DOWN (SMALLER MULTIPLIER) TO ACCOUNT FOR ASSISTING FORCE OF GRAVITY
+        if (gamepad2.right_stick_y > 0) {
+            liftPower = 0.15 * gamepad2.right_stick_y;
+        } else if (gamepad2.right_stick_y < 0) {
+            liftPower = 0.35 * gamepad2.right_stick_y;
+        } else if (gamepad2.left_stick_y > 0) {
+            liftPower = 0.2 * gamepad2.left_stick_y;
+        } else if (gamepad2.left_stick_y < 0) {
+            liftPower = 0.5 * gamepad2.left_stick_y;
         }
 
         motorSlideLeft.setPower(liftPower);
