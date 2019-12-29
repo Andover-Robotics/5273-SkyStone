@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.andoverrobotics.core.utilities.Coordinate;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+    import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,11 +17,13 @@ import java.util.concurrent.Future;
 
 @TeleOp(name = "Main TeleOp", group = "A") // Group is A to ensure this is at the top of the list
 public class Main extends OpMode {
-    private Servo foundationServo;
+    private Servo foundationServoLeft, foundationServoRight;
     private MecanumDrive mecanumDrive;
     private CRServo intakeServoLeft, intakeServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
     private final double SLOW_MODE = 0.3;
+
+    boolean isFalling = false;
 
     private Future<?> moveLiftMotor;
     private ExecutorService asyncExecutor = Executors.newSingleThreadExecutor();
@@ -90,13 +92,17 @@ public class Main extends OpMode {
         intakeServoLeft = hardwareMap.crservo.get("intakeLeft");
         intakeServoRight = hardwareMap.crservo.get("intakeRight");
 
-        foundationServo = hardwareMap.servo.get("foundationMover");
-        foundationServo.setPosition(0.15); // Reset position
+        foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
+        foundationServoLeft.setPosition(0.69); // Reset position
+        foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
+        foundationServoRight.setPosition(0.5);
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
 
-        motorSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorSlideLeft.setTargetPosition(0);
+        motorSlideRight.setTargetPosition(0);
+//        motorSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        motorSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
@@ -119,11 +125,14 @@ public class Main extends OpMode {
         mecanumDrive.setRotationPower(rotate_power);
 
         // FOUNDATION MOVER
-        if (gamepad1.left_bumper)
-            foundationServo.setPosition(0.15);
-        else if (gamepad1.right_bumper)
-            foundationServo.setPosition(0.69);
-
+        if (gamepad1.left_bumper) {
+            foundationServoLeft.setPosition(0.52);
+            foundationServoRight.setPosition(0.67);
+        }
+        else if (gamepad1.right_bumper) {
+            foundationServoLeft.setPosition(0.69);
+            foundationServoRight.setPosition(0.5);
+        }
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
 
@@ -148,11 +157,30 @@ public class Main extends OpMode {
         }
 
         // SLIDES
-        if (gamepad2.a || gamepad2.y) {
-            if (moveLiftMotor == null || moveLiftMotor.isDone()) {
-                asyncExecutor.submit(moveLift);
-            }
+//        if (gamepad2.a || gamepad2.y) {
+//            if (moveLiftMotor == null || moveLiftMotor.isDone()) {
+//                asyncExecutor.submit(moveLift);
+//            }
+//        }
+
+        if(isFalling && Math.abs(gamepad2.left_stick_y * 0.5) < 0.1){
+            motorSlideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            motorSlideRight.setTargetPosition(motorSlideRight.getCurrentPosition());
+            motorSlideLeft.setTargetPosition(motorSlideLeft.getCurrentPosition());
+
+            isFalling = true;
+        }else {
+            motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorSlideLeft.setPower(gamepad2.left_stick_y * 0.5);
+            motorSlideRight.setPower(gamepad2.left_stick_y * 0.5);
+
+            isFalling = false;
         }
+        telemetry.addData("MotorL Position: ", motorSlideLeft);
+        telemetry.addData("MotorR Position: ", motorSlideRight);
     }
 
     private void checkForInterrupt() throws InterruptedException {
