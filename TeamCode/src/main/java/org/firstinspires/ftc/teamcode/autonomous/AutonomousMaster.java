@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.GlobalConfig;
+import org.firstinspires.ftc.teamcode.vision.SkystoneDetector;
 
 public class AutonomousMaster extends LinearOpMode {
 
     protected MecanumDrive mecanumDrive;
+    protected SkystoneDetector skystoneDetector;
     private DcMotor motorFL, motorFR, motorBL, motorBR;
 
 
@@ -39,27 +41,24 @@ public class AutonomousMaster extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBR = hardwareMap.dcMotor.get("motorBR");
 
-        ((DcMotorEx) motorFL).setTargetPositionTolerance((int) Math.round(0.45 * GlobalConfig.TICKS_PER_INCH));
-        PIDFCoefficients coefficients = ((DcMotorEx) motorFL).getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        ((DcMotorEx) motorFL).setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
+        DcMotor[] motors = {motorFL, motorFR, motorBL, motorBR};
 
-        ((DcMotorEx) motorFR).setTargetPositionTolerance((int) Math.round(0.45 * GlobalConfig.TICKS_PER_INCH));
-        coefficients = ((DcMotorEx) motorFR).getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        ((DcMotorEx) motorFR).setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
-
-        ((DcMotorEx) motorBL).setTargetPositionTolerance((int) Math.round(0.45 * GlobalConfig.TICKS_PER_INCH));
-        coefficients = ((DcMotorEx) motorBL).getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        ((DcMotorEx) motorBL).setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
-
-        ((DcMotorEx) motorBR).setTargetPositionTolerance((int) Math.round(0.45 * GlobalConfig.TICKS_PER_INCH));
-        coefficients = ((DcMotorEx) motorBR).getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        ((DcMotorEx) motorBR).setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
+        // Adjust the tolerances and PID coefficients of motors to prevent micro-adjustments after movement
+        for(DcMotor motor: motors) {
+            DcMotorEx motorEX = (DcMotorEx) motor;
+            motorEX.setTargetPositionTolerance((int)(0.45 * GlobalConfig.TICKS_PER_INCH + 0.5));
+            PIDFCoefficients coefficients = motorEX.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorEX.setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
+        }
 
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
         mecanumDrive.setDefaultDrivePower(0.25);
+
+        skystoneDetector = new SkystoneDetector(hardwareMap, 280, 230, 130);
+        skystoneDetector.start();
     }
 
     // Waits for the OpMode to be run while sending messages between the phones
@@ -68,7 +67,6 @@ public class AutonomousMaster extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "WAITING");
             telemetry.addData("Time", System.currentTimeMillis());
-            telemetry.addLine(Double.toString(0.45 * GlobalConfig.TICKS_PER_INCH));
             telemetry.update();
         }
 
