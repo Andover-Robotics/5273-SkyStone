@@ -11,7 +11,8 @@ public abstract class SampleTile2Base extends AutonomousBase {
 
         int allianceDistanceMultiplier = currentAlliance == RobotAlliance.RED ? 1 : -1;
 
-        strafeRight(2 * allianceDistanceMultiplier);
+        driveForwards(4);
+        rotateCCW(90 * allianceDistanceMultiplier);
 
         driveForwards(16);
 
@@ -34,7 +35,6 @@ public abstract class SampleTile2Base extends AutonomousBase {
 
         switch (skystoneLocation) {
             case LEFT:
-                driveBackwards(2 * allianceDistanceMultiplier);
                 break;
             case MIDDLE:
                 driveBackwards(10 * allianceDistanceMultiplier);
@@ -45,7 +45,8 @@ public abstract class SampleTile2Base extends AutonomousBase {
         }
 
         rotateCW(90 * allianceDistanceMultiplier);
-        driveForwards(28);
+        driveForwards(32);
+        driveBackwards(6);
 
         if (skystoneLocation != SkystoneLocation.RIGHT)
             rotateCCW(90 * allianceDistanceMultiplier);
