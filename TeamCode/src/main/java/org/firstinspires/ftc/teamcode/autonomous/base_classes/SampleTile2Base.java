@@ -40,12 +40,12 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 driveBackwards(10 * allianceDistanceMultiplier);
                 break;
             case RIGHT:
-                driveForwards(4 * allianceDistanceMultiplier);
+                driveForwards(5 * allianceDistanceMultiplier);
                 break;
         }
 
         rotateCW(90 * allianceDistanceMultiplier);
-        driveForwards(32);
+        driveForwards(38);
         driveBackwards(6);
 
         if (skystoneLocation != SkystoneLocation.RIGHT)
