@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.alliance_insignificant;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Park (Tile 3)", group = "A")
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousMaster;
+
+@Autonomous(name = "Park (Tile 3)", group = "AA")
 public class ParkTile3 extends AutonomousMaster {
     @Override
     public void runOpMode() throws InterruptedException {

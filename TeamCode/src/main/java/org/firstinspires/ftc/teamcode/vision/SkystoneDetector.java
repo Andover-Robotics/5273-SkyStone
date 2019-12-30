@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import android.util.Pair;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.opencv.core.Core;
@@ -17,7 +15,6 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class SkystoneDetector {
     private OpenCvCamera camera;
@@ -52,6 +49,30 @@ public class SkystoneDetector {
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    public int getStoneBaseYCoordinate() {
+        return stoneBaseYCoordinate;
+    }
+
+    public void setStoneBaseYCoordinate(int stoneBaseYCoordinate) {
+        this.stoneBaseYCoordinate = stoneBaseYCoordinate;
+    }
+
+    public int getStoneWidth() {
+        return stoneWidth;
+    }
+
+    public void setStoneWidth(int stoneWidth) {
+        this.stoneWidth = stoneWidth;
+    }
+
+    public int getStoneHeight() {
+        return stoneHeight;
+    }
+
+    public void setStoneHeight(int stoneHeight) {
+        this.stoneHeight = stoneHeight;
     }
 
     private class StoneProcessingPipeline extends OpenCvPipeline {

@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-@TeleOp(name = "Main TeleOp", group = "A") // Group is A to ensure this is at the top of the list
+@TeleOp(name = "Main TeleOp", group = "AA") // Group is A to ensure this is at the top of the list
 public class Main extends OpMode {
     private Servo foundationServoLeft, foundationServoRight;
     private MecanumDrive mecanumDrive;

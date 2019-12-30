@@ -14,7 +14,7 @@ public class AutonomousMaster extends LinearOpMode {
 
     protected MecanumDrive mecanumDrive;
     protected SkystoneDetector skystoneDetector;
-    private DcMotor motorFL, motorFR, motorBL, motorBR;
+    private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
 
 
     @Override
@@ -41,14 +41,27 @@ public class AutonomousMaster extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBR = hardwareMap.dcMotor.get("motorBR");
 
-        DcMotor[] motors = {motorFL, motorFR, motorBL, motorBR};
+        motorSlideLeft = hardwareMap.dcMotor.get("liftLeft");
+        motorSlideRight = hardwareMap.dcMotor.get("liftRight");
+
+        DcMotor[] motors = {motorFL, motorFR, motorBL, motorBR}, slideMotors = {motorSlideLeft, motorSlideRight};
 
         // Adjust the tolerances and PID coefficients of motors to prevent micro-adjustments after movement
-        for(DcMotor motor: motors) {
+        for (DcMotor motor : motors) {
             DcMotorEx motorEX = (DcMotorEx) motor;
-            motorEX.setTargetPositionTolerance((int)(0.45 * GlobalConfig.TICKS_PER_INCH + 0.5));
+            motorEX.setTargetPositionTolerance((int) (0.45 * GlobalConfig.TICKS_PER_INCH + 0.5));
             PIDFCoefficients coefficients = motorEX.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             motorEX.setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
+        }
+
+        // Adjust the slide motors separately because they require more precision
+        for (DcMotor motor : slideMotors) {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setTargetPosition(0);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            DcMotorEx motorEX = (DcMotorEx) motor;
+            motorEX.setTargetPositionTolerance(10);
         }
 
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
