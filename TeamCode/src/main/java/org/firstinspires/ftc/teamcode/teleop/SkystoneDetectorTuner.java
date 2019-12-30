@@ -79,6 +79,7 @@ public class SkystoneDetectorTuner extends LinearOpMode {
             detector.setStoneHeight(stoneHeight);
 
             // Log current values
+            telemetry.addData("gamepad1", gamepad1);
             telemetry.addData("stoneBaseYCoordinate", stoneBaseYCoordinate);
             telemetry.addData("stoneWidth", stoneWidth);
             telemetry.addData("stoneHeight", stoneHeight);
