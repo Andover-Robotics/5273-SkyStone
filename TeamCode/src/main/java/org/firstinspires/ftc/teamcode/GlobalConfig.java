@@ -12,6 +12,6 @@ public final class GlobalConfig {
 
     // Ticks
     // xxx in/rev, 537.6 ticks/rev
-    public final static int TICKS_PER_INCH = (int) Math.round(TICKS_PER_MOTOR_REVOLUTION / MECANUM_CIRCUMFERENCE_IN) * 30 / 24;
-    public final static int TICKS_PER_360 = 5200;
+    public final static int TICKS_PER_INCH = (int) Math.round((TICKS_PER_MOTOR_REVOLUTION / MECANUM_CIRCUMFERENCE_IN) * 1.5);
+    public final static int TICKS_PER_360 = 2850;
 }

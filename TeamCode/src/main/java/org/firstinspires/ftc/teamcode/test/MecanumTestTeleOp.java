@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "TeleOp", group = "Test")
+@TeleOp(name = "Mecanum Drive Test TeleOp", group = "Test")
 public class  MecanumTestTeleOp extends OpMode {
 
     private MecanumDrive mecanumDrive;

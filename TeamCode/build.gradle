@@ -4,7 +4,7 @@
 // Most of the definitions for building your module reside in a common, shared
 // file 'build.common.gradle'. Being factored in this way makes it easier to
 // integrate updates to the FTC into your code. If you really need to customize
-// the build definitions, you can place those customizations in this file, but
+// the build definitions, you can place those customizations in this file, but.m .
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
 // Custom definitions may go here
@@ -15,7 +15,6 @@ dependencies {
      * Other Modules
      */
     implementation project(':FtcRobotController')
-    implementation project(':ARC-Core')
 
     turboImplementation project(':Hardware')
     turboImplementation project(':RobotCore')
@@ -24,4 +23,7 @@ dependencies {
     extremeTurboImplementation project(':Hardware')
     extremeTurboImplementation project(':RobotCore')
     extremeTurboImplementation project(':FtcCommon')
+
+    implementation 'com.acmerobotics.roadrunner:core:0.4.7'
+    implementation project(':ARC-Core')
 }

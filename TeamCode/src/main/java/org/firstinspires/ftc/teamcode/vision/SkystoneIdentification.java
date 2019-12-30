@@ -27,7 +27,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@Autonomous(name = "Vuforia Demo", group = "Test")
 public class SkystoneIdentification extends LinearOpMode {
 
     // Used to convert between inches and millimeters ([value in in.] * mmPerInch = [value in mm.])
@@ -56,21 +55,6 @@ public class SkystoneIdentification extends LinearOpMode {
         // We don't know where the robot is, so set it to the origin
         // If we don't include this, it would be null, which would cause errors later on
         lastKnownLocation = originMatrix();
-
-        motorFL = hardwareMap.dcMotor.get("motorFL");
-        motorFR = hardwareMap.dcMotor.get("motorFR");
-        motorBL = hardwareMap.dcMotor.get("motorBL");
-        motorBR = hardwareMap.dcMotor.get("motorBR");
-
-
-        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, 63, 5200);
-        mecanumDrive.setDefaultDrivePower(0.75);
-
-        telemetry.addLine("Ready!");
-        telemetry.update();
 
         waitForStart();
 
