@@ -37,7 +37,7 @@ Classes related to computer vision software, such as skystone detection, should 
 ## Autonomous Package Specifications
 What to put in each subpackage of the package `org.firstinspires.ftc.teamcode.autonomous`. 
 
-In general, **all autonomous OpModes should extend `AutonomousMaster` at some point in the inheritance hierarchy.** Utilize the inherited fields to simplify code and reduce repetetive code.
+In general, **all autonomous OpModes should extend `AutonomousMaster` at some point in the inheritance hierarchy.** Utilize the inherited fields to simplify code and reduce repetitive code.
 
 ### `alliance_insignificant`
 Autonomous OpModes in this package should function **exactly the same** in the specified starting position on **both sides of the field**. In other words, the function of the OpMode is not dependent on the current alliance.
