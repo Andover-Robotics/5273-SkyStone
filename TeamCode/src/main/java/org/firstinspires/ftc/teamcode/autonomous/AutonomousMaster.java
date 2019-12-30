@@ -85,5 +85,43 @@ public class AutonomousMaster extends LinearOpMode {
 
         telemetry.update();
     }
+
+    protected void driveForwards(int distanceInInches) {
+        driveForwards(distanceInInches, mecanumDrive.getDefaultDrivePower());
+    }
+
+    protected void driveForwards(int distanceInInches, double power) {
+        if (distanceInInches < 0)
+            mecanumDrive.driveBackwards(-distanceInInches, power);
+        else
+            mecanumDrive.driveForwards(distanceInInches, power);
+    }
+
+    protected void driveBackwards(int distanceInInches) {
+        driveBackwards(distanceInInches, mecanumDrive.getDefaultDrivePower());
+    }
+
+    protected void driveBackwards(int distanceInInches, double power) {
+        driveForwards(-distanceInInches, power);
+    }
+
+    protected void rotateCW(int degrees) {
+        rotateCW(degrees, mecanumDrive.getDefaultDrivePower());
+    }
+
+    protected void rotateCW(int degrees, double power) {
+        if (degrees < 0)
+            mecanumDrive.rotateCounterClockwise(-degrees, power);
+        else
+            mecanumDrive.rotateClockwise(degrees, power);
+    }
+
+    protected void rotateCCW(int degrees) {
+        rotateCCW(degrees, mecanumDrive.getDefaultDrivePower());
+    }
+
+    protected void rotateCCW(int degrees, double power) {
+        rotateCW(-degrees, power);
+    }
 }
 

@@ -9,7 +9,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        mecanumDrive.driveForwards(16);
+        driveForwards(16);
 
         sleep(200); // Let the camera refocus
 
@@ -31,18 +31,18 @@ public abstract class SampleTile2Base extends AutonomousBase {
 
         switch (skystoneLocation) {
             case LEFT:
-                mecanumDrive.driveBackwards(2 * allianceDistanceMultiplier);
+                driveBackwards(2 * allianceDistanceMultiplier);
                 break;
             case MIDDLE:
-                mecanumDrive.driveBackwards(10 * allianceDistanceMultiplier);
+                driveBackwards(10 * allianceDistanceMultiplier);
                 break;
             case RIGHT:
-                mecanumDrive.driveForwards(4 * allianceDistanceMultiplier);
+                driveForwards(4 * allianceDistanceMultiplier);
                 break;
         }
 
-        mecanumDrive.rotateClockwise(90 * allianceDistanceMultiplier);
-        mecanumDrive.driveForwards(24);
+        rotateCW(90 * allianceDistanceMultiplier);
+        driveForwards(24);
     }
 
 }
