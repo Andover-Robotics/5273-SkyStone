@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.base_classes;
 
+import org.firstinspires.ftc.teamcode.autonomous.RobotAlliance;
 import org.firstinspires.ftc.teamcode.vision.SkystoneLocation;
 
 public abstract class SampleTile2Base extends AutonomousBase {
@@ -26,17 +27,22 @@ public abstract class SampleTile2Base extends AutonomousBase {
         telemetry.addData("Skystone Location", skystoneLocation);
         telemetry.update();
 
+        int allianceDistanceMultiplier = currentAlliance == RobotAlliance.RED ? 1 : -1;
+
         switch (skystoneLocation) {
             case LEFT:
-                mecanumDrive.driveForwards(3);
+                mecanumDrive.driveBackwards(2 * allianceDistanceMultiplier);
                 break;
             case MIDDLE:
-                mecanumDrive.driveBackwards(5);
+                mecanumDrive.driveBackwards(10 * allianceDistanceMultiplier);
                 break;
             case RIGHT:
-                mecanumDrive.driveForwards(0); // TODO: Measure this distance
+                mecanumDrive.driveForwards(4 * allianceDistanceMultiplier);
                 break;
         }
+
+        mecanumDrive.rotateClockwise(90 * allianceDistanceMultiplier);
+        mecanumDrive.driveForwards(24);
     }
 
 }
