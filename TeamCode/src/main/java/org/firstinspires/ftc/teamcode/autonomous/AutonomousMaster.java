@@ -70,7 +70,7 @@ public class AutonomousMaster extends LinearOpMode {
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
         mecanumDrive.setDefaultDrivePower(0.25);
 
-        skystoneDetector = new SkystoneDetector(hardwareMap, 280, 230, 130);
+        skystoneDetector = new SkystoneDetector(hardwareMap, 300, 230, 110);
         skystoneDetector.start();
     }
 
