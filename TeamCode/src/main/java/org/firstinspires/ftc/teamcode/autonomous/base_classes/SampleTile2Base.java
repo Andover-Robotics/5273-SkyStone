@@ -8,7 +8,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        mecanumDrive.driveForwards(12);
+        mecanumDrive.driveForwards(16);
 
         sleep(200); // Let the camera refocus
 
