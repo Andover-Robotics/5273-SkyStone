@@ -105,6 +105,25 @@ public class AutonomousMaster extends LinearOpMode {
         driveForwards(-distanceInInches, power);
     }
 
+    protected void strafeRight(int distanceInInches) {
+        strafeRight(distanceInInches, mecanumDrive.getDefaultDrivePower());
+    }
+
+    protected void strafeRight(int distanceInInches, double power) {
+        if (distanceInInches < 0)
+            mecanumDrive.strafeLeft(-distanceInInches, power);
+        else
+            mecanumDrive.strafeRight(distanceInInches, power);
+    }
+
+    protected void strafeLeft(int distanceInInches) {
+        strafeLeft(distanceInInches, mecanumDrive.getDefaultDrivePower());
+    }
+
+    protected void strafeLeft(int distanceInInches, double power) {
+        strafeRight(-distanceInInches, power);
+    }
+
     protected void rotateCW(int degrees) {
         rotateCW(degrees, mecanumDrive.getDefaultDrivePower());
     }

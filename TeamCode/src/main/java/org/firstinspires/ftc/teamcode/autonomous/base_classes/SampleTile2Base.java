@@ -9,6 +9,10 @@ public abstract class SampleTile2Base extends AutonomousBase {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
+        int allianceDistanceMultiplier = currentAlliance == RobotAlliance.RED ? 1 : -1;
+
+        strafeRight(2 * allianceDistanceMultiplier);
+
         driveForwards(16);
 
         sleep(200); // Let the camera refocus
@@ -27,7 +31,6 @@ public abstract class SampleTile2Base extends AutonomousBase {
         telemetry.addData("Skystone Location", skystoneLocation);
         telemetry.update();
 
-        int allianceDistanceMultiplier = currentAlliance == RobotAlliance.RED ? 1 : -1;
 
         switch (skystoneLocation) {
             case LEFT:
@@ -42,7 +45,12 @@ public abstract class SampleTile2Base extends AutonomousBase {
         }
 
         rotateCW(90 * allianceDistanceMultiplier);
-        driveForwards(24);
+        driveForwards(28);
+
+        if (skystoneLocation != SkystoneLocation.RIGHT)
+            rotateCCW(90 * allianceDistanceMultiplier);
+        else
+            rotateCW(90 * allianceDistanceMultiplier);
     }
 
 }
