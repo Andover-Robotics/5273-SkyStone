@@ -1,6 +1,6 @@
-# Code structure and management
+# Code Structure and Management (The Programmers' Manifesto)
 
-The manifesto for all things autonomous. Follow these practices and life will be easier for all of us.
+The manifesto for all of ARC Thunder's code. Follow these practices and life will be easier for all of us.
 
 ## **Autonomous** OpMode naming conventions
 
@@ -14,7 +14,7 @@ The manifesto for all things autonomous. Follow these practices and life will be
     * `Blue Skystone (Tile 2)`
     * `Red Foundation (Top Tile 5)`
     * `Park (Middle Tile 3)`
-    * `Park (Bottom Tile 4)`
+    * `R Foundation (Bottom Tile 4)`
     
 ## OpMode grouping conventions
 * If the OpMode is purely test code and not to be used in competition, set the group to `Test`
@@ -37,7 +37,7 @@ Classes related to computer vision software, such as skystone detection, should 
 ## Autonomous Package Specifications
 What to put in each subpackage of the package `org.firstinspires.ftc.teamcode.autonomous`. 
 
-In general, **all autonomous OpModes should extend `AutonomousMaster` at some point in the inheritance hierarchy.**
+In general, **all autonomous OpModes should extend `AutonomousMaster` at some point in the inheritance hierarchy.** Utilize the inherited fields to simplify code and reduce repetetive code.
 
 ### `alliance_insignificant`
 Autonomous OpModes in this package should function **exactly the same** in the specified starting position on **both sides of the field**. In other words, the function of the OpMode is not dependent on the current alliance.
@@ -77,7 +77,7 @@ public class SampleTile2 extends SampleTile2Base {
 
 They simply provide a name for the OpMode and a group, and implement the abstract method `getCurrentAlliance()`. The `runOpMode()` method is not changed, as `SampleTile2Base`'s `runOpMode()` adapts to the given implementation of `getCurrentAlliance()` to move properly.
 
-Ideally, the `blue` and `red` packages should mostly contain implementation of `base_classes` OpModes. 
+Ideally, the `blue` and `red` packages should mostly contain implementations of `base_classes` OpModes. 
 
 ### `blue`
 OpModes intended to be run from the specified starting position on the **blue alliance** go here.
