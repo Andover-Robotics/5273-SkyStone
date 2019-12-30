@@ -41,6 +41,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 break;
             case RIGHT:
                 driveForwards(8 * allianceDistanceMultiplier);
+                driveBackwards(2 * allianceDistanceMultiplier);
                 break;
         }
 
