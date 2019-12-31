@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.vision.SkystoneDetector;
 public class SkystoneDetectorTuner extends LinearOpMode {
 
     private SkystoneDetector detector;
-    private int stoneBaseYCoordinate = 0, stoneWidth = 200, stoneHeight = 100;
+    private int stoneBaseYCoordinate = 300, stoneWidth = 230, stoneHeight = 110;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -79,6 +79,7 @@ public class SkystoneDetectorTuner extends LinearOpMode {
             detector.setStoneHeight(stoneHeight);
 
             // Log current values
+            telemetry.addData("gamepad1", gamepad1);
             telemetry.addData("stoneBaseYCoordinate", stoneBaseYCoordinate);
             telemetry.addData("stoneWidth", stoneWidth);
             telemetry.addData("stoneHeight", stoneHeight);

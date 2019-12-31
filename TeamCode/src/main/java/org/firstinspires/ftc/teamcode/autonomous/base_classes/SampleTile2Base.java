@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.base_classes;
 
+import org.firstinspires.ftc.teamcode.autonomous.RobotAlliance;
 import org.firstinspires.ftc.teamcode.vision.SkystoneLocation;
 
 public abstract class SampleTile2Base extends AutonomousBase {
@@ -8,7 +9,12 @@ public abstract class SampleTile2Base extends AutonomousBase {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        mecanumDrive.driveForwards(12);
+        int allianceDistanceMultiplier = currentAlliance == RobotAlliance.RED ? 1 : -1;
+
+        driveForwards(4);
+        rotateCCW(90 * allianceDistanceMultiplier);
+
+        driveForwards(16);
 
         sleep(200); // Let the camera refocus
 
@@ -26,17 +32,27 @@ public abstract class SampleTile2Base extends AutonomousBase {
         telemetry.addData("Skystone Location", skystoneLocation);
         telemetry.update();
 
+
         switch (skystoneLocation) {
             case LEFT:
-                mecanumDrive.driveForwards(3);
                 break;
             case MIDDLE:
-                mecanumDrive.driveBackwards(5);
+                driveBackwards(10 * allianceDistanceMultiplier);
                 break;
             case RIGHT:
-                mecanumDrive.driveForwards(0); // TODO: Measure this distance
+                driveForwards(8 * allianceDistanceMultiplier);
+                driveBackwards(2 * allianceDistanceMultiplier);
                 break;
         }
+
+        rotateCW(90 * allianceDistanceMultiplier);
+        driveForwards(38);
+        driveBackwards(6);
+
+        if (skystoneLocation != SkystoneLocation.RIGHT)
+            rotateCCW(90 * allianceDistanceMultiplier);
+        else
+            rotateCW(90 * allianceDistanceMultiplier);
     }
 
 }
