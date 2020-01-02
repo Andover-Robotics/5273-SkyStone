@@ -107,7 +107,7 @@ public class Main extends OpMode {
 
     @Override
     public void loop() {
-        // MOVEMENT (DRIVING/STRAFING AND ROTATION
+        // MOVEMENT (DRIVING/STRAFING AND ROTATION)
         double strafe_x = -gamepad1.left_stick_x, strafe_y = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x;
 
         // SLOW MODE STRAFE WITH D-PAD
@@ -165,8 +165,8 @@ public class Main extends OpMode {
 
         motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorSlideLeft.setPower(gamepad2.left_stick_y * 0.5);
-        motorSlideRight.setPower(gamepad2.left_stick_y * 0.5);
+        motorSlideLeft.setPower(gamepad2.left_stick_y * 0.5 - 0.1);
+        motorSlideRight.setPower(gamepad2.left_stick_y * 0.5 - 0.1);
 
     }
 
