@@ -19,7 +19,7 @@ public class StraightLineTest extends AutonomousMaster {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        mecanumDrive.driveForwards(60);
+        mecanumDrive.strafeRight(48, 0.5);
 
 //        motorFL.setTargetPosition(GlobalConfig.TICKS_PER_INCH * 60);
 //        motorFR.setTargetPosition(GlobalConfig.TICKS_PER_INCH * 60);

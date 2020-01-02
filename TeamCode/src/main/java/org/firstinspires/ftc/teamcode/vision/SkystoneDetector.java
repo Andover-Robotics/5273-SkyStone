@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.Arrays;
 
 public class SkystoneDetector {
-    private OpenCvCamera camera;
+    private OpenCvInternalCamera camera;
     private StoneProcessingPipeline pipeline;
     private int stoneBaseYCoordinate, stoneWidth, stoneHeight;
 
@@ -39,7 +39,12 @@ public class SkystoneDetector {
         camera.startStreaming(960, 720, OpenCvCameraRotation.UPSIDE_DOWN);
     }
 
+    public void setFlashLight(boolean value) {
+        camera.setFlashlightEnabled(value);
+    }
+
     public void stop() {
+        camera.setFlashlightEnabled(false);
         camera.stopStreaming();
     }
 

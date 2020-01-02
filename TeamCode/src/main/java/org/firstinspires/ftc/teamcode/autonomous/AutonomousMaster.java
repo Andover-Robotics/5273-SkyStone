@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.GlobalConfig;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDetector;
@@ -14,6 +16,8 @@ public class AutonomousMaster extends LinearOpMode {
 
     protected MecanumDrive mecanumDrive;
     protected SkystoneDetector skystoneDetector;
+    private CRServo intakeServoLeft, intakeServoRight;
+    protected Servo foundationServoLeft, foundationServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
 
 
@@ -43,35 +47,41 @@ public class AutonomousMaster extends LinearOpMode {
 
         motorSlideLeft = hardwareMap.dcMotor.get("liftLeft");
         motorSlideRight = hardwareMap.dcMotor.get("liftRight");
+        motorSlideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         DcMotor[] motors = {motorFL, motorFR, motorBL, motorBR}, slideMotors = {motorSlideLeft, motorSlideRight};
 
         // Adjust the tolerances and PID coefficients of motors to prevent micro-adjustments after movement
         for (DcMotor motor : motors) {
             DcMotorEx motorEX = (DcMotorEx) motor;
-            motorEX.setTargetPositionTolerance((int) (0.45 * GlobalConfig.TICKS_PER_INCH + 0.5));
+            motorEX.setTargetPositionTolerance((int) (0.8 * GlobalConfig.TICKS_PER_INCH + 0.5));
             PIDFCoefficients coefficients = motorEX.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             motorEX.setVelocityPIDFCoefficients(coefficients.p + 0.1, coefficients.i + 0.5, coefficients.d, coefficients.f + 0.2);
         }
 
         // Adjust the slide motors separately because they require more precision
         for (DcMotor motor : slideMotors) {
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setTargetPosition(0);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            DcMotorEx motorEX = (DcMotorEx) motor;
-            motorEX.setTargetPositionTolerance(10);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
-        mecanumDrive.setDefaultDrivePower(0.25);
+        mecanumDrive.setDefaultDrivePower(0.2);
+
+        foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
+        foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
+
+        foundationServoLeft.setPosition(0.9);
+        foundationServoRight.setPosition(0.2);
 
         skystoneDetector = new SkystoneDetector(hardwareMap, 300, 230, 110);
         skystoneDetector.start();
+
+        intakeServoLeft = hardwareMap.crservo.get("intakeLeft");
+        intakeServoRight = hardwareMap.crservo.get("intakeRight");
+        intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     // Waits for the OpMode to be run while sending messages between the phones
@@ -86,41 +96,42 @@ public class AutonomousMaster extends LinearOpMode {
         telemetry.update();
     }
 
-    protected void driveForwards(int distanceInInches) {
+    protected void driveForwards(double distanceInInches) {
         driveForwards(distanceInInches, mecanumDrive.getDefaultDrivePower());
     }
 
-    protected void driveForwards(int distanceInInches, double power) {
+    protected void driveForwards(double distanceInInches, double power) {
         if (distanceInInches < 0)
             mecanumDrive.driveBackwards(-distanceInInches, power);
         else
             mecanumDrive.driveForwards(distanceInInches, power);
     }
 
-    protected void driveBackwards(int distanceInInches) {
+    protected void driveBackwards(double distanceInInches) {
         driveBackwards(distanceInInches, mecanumDrive.getDefaultDrivePower());
     }
 
-    protected void driveBackwards(int distanceInInches, double power) {
+    protected void driveBackwards(double distanceInInches, double power) {
         driveForwards(-distanceInInches, power);
     }
 
-    protected void strafeRight(int distanceInInches) {
+    protected void strafeRight(double distanceInInches) {
         strafeRight(distanceInInches, mecanumDrive.getDefaultDrivePower());
     }
 
-    protected void strafeRight(int distanceInInches, double power) {
+    protected void strafeRight(double distanceInInches, double power) {
         if (distanceInInches < 0)
             mecanumDrive.strafeLeft(-distanceInInches, power);
         else
             mecanumDrive.strafeRight(distanceInInches, power);
     }
 
-    protected void strafeLeft(int distanceInInches) {
+
+    protected void strafeLeft(double distanceInInches) {
         strafeLeft(distanceInInches, mecanumDrive.getDefaultDrivePower());
     }
 
-    protected void strafeLeft(int distanceInInches, double power) {
+    protected void strafeLeft(double distanceInInches, double power) {
         strafeRight(-distanceInInches, power);
     }
 
@@ -141,6 +152,20 @@ public class AutonomousMaster extends LinearOpMode {
 
     protected void rotateCCW(int degrees, double power) {
         rotateCW(-degrees, power);
+    }
+
+    protected void setLiftPower(double power) {
+        motorSlideRight.setPower(power);
+        motorSlideLeft.setPower(power);
+    }
+
+    protected void holdLiftLocation() {
+        setLiftPower(0.07);
+    }
+
+    protected void setIntakePower(double power) {
+        intakeServoRight.setPower(power);
+        intakeServoLeft.setPower(power);
     }
 }
 

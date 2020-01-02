@@ -84,6 +84,10 @@ public class SkystoneDetectorTuner extends LinearOpMode {
             telemetry.addData("stoneWidth", stoneWidth);
             telemetry.addData("stoneHeight", stoneHeight);
             telemetry.addData("Perceived skystone location", detector.getSkystoneLocation());
+
+            idle();
+            sleep(200);
+
             telemetry.update();
         }
 

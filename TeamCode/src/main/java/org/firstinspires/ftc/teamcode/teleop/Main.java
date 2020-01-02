@@ -163,24 +163,11 @@ public class Main extends OpMode {
 //            }
 //        }
 
-        if(isFalling && Math.abs(gamepad2.left_stick_y * 0.5) < 0.1){
-            motorSlideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorSlideLeft.setPower(gamepad2.left_stick_y * 0.5);
+        motorSlideRight.setPower(gamepad2.left_stick_y * 0.5);
 
-            motorSlideRight.setTargetPosition(motorSlideRight.getCurrentPosition());
-            motorSlideLeft.setTargetPosition(motorSlideLeft.getCurrentPosition());
-
-            isFalling = true;
-        }else {
-            motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorSlideLeft.setPower(gamepad2.left_stick_y * 0.5);
-            motorSlideRight.setPower(gamepad2.left_stick_y * 0.5);
-
-            isFalling = false;
-        }
-        telemetry.addData("MotorL Position: ", motorSlideLeft);
-        telemetry.addData("MotorR Position: ", motorSlideRight);
     }
 
     private void checkForInterrupt() throws InterruptedException {
