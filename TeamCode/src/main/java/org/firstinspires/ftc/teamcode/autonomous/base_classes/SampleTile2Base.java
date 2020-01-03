@@ -99,7 +99,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
             case MIDDLE:
                 driveBackwards(3 * allianceDistanceMultiplier, 0.5);
 
-                rotateCW(94);
+                rotateCW(90);
 
                 driveForwards(20, 0.5);
                 driveForwards(18);
@@ -116,16 +116,20 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 sleep(250);
                 setLiftPower(0);
                 strafeLeft(2, 0.5);
-                sleep(750);
+                sleep(1000);
 
 
-                driveBackwards(30, 0.5);
+                driveBackwards(5, 0.25);
+                driveBackwards(25, 0.5);
                 setLiftPower(0.5);
                 sleep(250);
                 holdLiftLocation();
                 setIntakePower(0);
 
-                rotateCCW(85, 0.75);
+                rotateCW(90 * allianceDistanceMultiplier, 0.75);
+                setIntakePower(-0.25);
+                sleep(100);
+                setIntakePower(0);
                 driveForwards(76, 0.75);
 
                 break;
@@ -138,7 +142,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
 
                 strafeLeft(22 * allianceDistanceMultiplier, 0.5);
 
-                mecanumDrive.setMovementPower(-0.4);
+                mecanumDrive.setMovementPower(-0.2);
                 sleep(currentAlliance == RobotAlliance.RED ? 1500 : 300);
                 mecanumDrive.stop();
 
@@ -157,7 +161,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 rotateCW(15 * allianceDistanceMultiplier, 0.5);
 
                 driveForwards(4);
-                driveBackwards(3);
+                driveBackwards(2.25);
 
                 setLiftPower(-0.25);
                 setIntakePower(1);
@@ -168,37 +172,35 @@ public abstract class SampleTile2Base extends AutonomousBase {
 
                 setIntakePower(0);
 
-                if (currentAlliance == RobotAlliance.BLUE) {
-                    rotateCCW(30);
-                    mecanumDrive.setMovementPower(-0.5);
-                    setLiftPower(0.5);
-                    sleep(750);
-                    holdLiftLocation();
-                    mecanumDrive.stop();
+                rotateCW(allianceDistanceMultiplier * 30);
+                mecanumDrive.setMovementPower(-0.2);
+                setLiftPower(0.5);
+                sleep(750);
+                holdLiftLocation();
+                mecanumDrive.stop();
 
-                    strafeLeft(34, 0.5);
+                strafeRight(allianceDistanceMultiplier * 34, 0.5);
 
-                    mecanumDrive.setMovementPower(-0.5);
-                    setLiftPower(-0.25);
-                    setIntakePower(1);
-                    sleep(500);
-                    setLiftPower(0);
-                    sleep(500);
-                    mecanumDrive.stop();
-                    setIntakePower(0);
+                mecanumDrive.setMovementPower(-0.2);
+                setLiftPower(-0.25);
+                setIntakePower(1);
+                sleep(500);
+                setLiftPower(0);
+                sleep(500);
+                mecanumDrive.stop();
+                setIntakePower(0);
 
-                    setLiftPower(0.5);
-                    sleep(250);
-                    holdLiftLocation();
+                setLiftPower(0.5);
+                sleep(250);
+                holdLiftLocation();
 
-                    driveForwards(80, 0.75);
-                }
+                driveForwards(80, 0.75);
 
                 break;
         }
 
 
-        mecanumDrive.setStrafe(Coordinate.fromXY(allianceDistanceMultiplier, 0), 0.75);
+        mecanumDrive.setStrafe(Coordinate.fromXY(allianceDistanceMultiplier, 0), 0.25);
         sleep(1250);
         mecanumDrive.stop();
 
