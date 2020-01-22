@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.andoverrobotics.core.utilities.Coordinate;
-    import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -57,7 +57,7 @@ public class Main extends OpMode {
             motorSlideLeft.setPower(SLOW_MODE);
             motorSlideRight.setPower(SLOW_MODE);
 
-            while(motorSlideLeft.isBusy() || motorSlideRight.isBusy()) {
+            while (motorSlideLeft.isBusy() || motorSlideRight.isBusy()) {
                 telemetry.addData("Left Position", motorSlideLeft.getCurrentPosition());
                 telemetry.addData("Left Target", motorSlideLeft.getTargetPosition());
                 telemetry.addData("Right Position", motorSlideRight.getCurrentPosition());
@@ -87,7 +87,7 @@ public class Main extends OpMode {
         motorSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorSlideRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorSlideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeServoLeft = hardwareMap.crservo.get("intakeLeft");
         intakeServoRight = hardwareMap.crservo.get("intakeRight");
@@ -128,8 +128,7 @@ public class Main extends OpMode {
         if (gamepad1.left_bumper) {
             foundationServoLeft.setPosition(0.52);
             foundationServoRight.setPosition(0.67);
-        }
-        else if (gamepad1.right_bumper) {
+        } else if (gamepad1.right_bumper) {
             foundationServoLeft.setPosition(0.69);
             foundationServoRight.setPosition(0.5);
         }
@@ -165,8 +164,20 @@ public class Main extends OpMode {
 
         motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorSlideLeft.setPower(gamepad2.left_stick_y * 0.5 - 0.1);
-        motorSlideRight.setPower(gamepad2.left_stick_y * 0.5 - 0.1);
+
+        double slidePower = -gamepad2.left_stick_y;
+
+        if (Math.abs(slidePower) <= 0.04)
+            slidePower = 0.1;
+        else if (slidePower < -0.04)
+
+            slidePower = 0.0075;
+
+        telemetry.addData("slidePower", slidePower);
+        telemetry.update();
+
+        motorSlideLeft.setPower(slidePower);
+        motorSlideRight.setPower(slidePower);
 
     }
 

@@ -21,7 +21,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
         rotateCCW(90, 0.5);
 
         skystoneDetector.setFlashLight(true);
-        driveForwards(12 * allianceDistanceMultiplier, 0.5);
+        driveForwards(12 * allianceDistanceMultiplier, 0.35);
 
         if (currentAlliance == RobotAlliance.BLUE) {
             mecanumDrive.setMovementPower(-0.3);
@@ -93,7 +93,11 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 strafeRight(26, 0.75);
                 rotateCCW(180, 0.5);
 
-                driveForwards(60, 0.8);
+                setIntakePower(-0.25);
+                sleep(500);
+                setIntakePower(0);
+
+                driveForwards(70, 0.8);
 
                 break;
             case MIDDLE:
@@ -104,11 +108,11 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 driveForwards(20, 0.5);
                 driveForwards(18);
                 setLiftPower(0.5);
-                driveBackwards(15, 0.4);
+                driveBackwards(17.5, 0.4);
                 holdLiftLocation();
 
                 strafeLeft(11 * allianceDistanceMultiplier);
-                driveForwards(9, 0.3);
+                driveForwards(11.5, 0.3);
                 driveBackwards(2);
 
                 setIntakePower(1);
@@ -126,7 +130,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 holdLiftLocation();
                 setIntakePower(0);
 
-                rotateCW(90 * allianceDistanceMultiplier, 0.75);
+                rotateCW(80 * allianceDistanceMultiplier, 0.75);
                 setIntakePower(-0.25);
                 sleep(100);
                 setIntakePower(0);
@@ -150,7 +154,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 sleep(300);
                 holdLiftLocation();
 
-                strafeLeft(15 * allianceDistanceMultiplier, 0.5);
+                strafeLeft(16.5 * allianceDistanceMultiplier, 0.5);
 
                 if (currentAlliance == RobotAlliance.BLUE)
                     rotateCCW(15, 0.75);
@@ -160,8 +164,8 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 rotateCCW(35 * allianceDistanceMultiplier, 0.75);
                 rotateCW(15 * allianceDistanceMultiplier, 0.5);
 
-                driveForwards(4);
-                driveBackwards(2.25);
+                driveForwards(6);
+                driveBackwards(2.85);
 
                 setLiftPower(-0.25);
                 setIntakePower(1);
@@ -170,14 +174,16 @@ public abstract class SampleTile2Base extends AutonomousBase {
 
                 sleep(2000);
 
-                setIntakePower(0);
+                driveBackwards(2);
 
-                rotateCW(allianceDistanceMultiplier * 30);
+
+                rotateCW(allianceDistanceMultiplier * 25);
                 mecanumDrive.setMovementPower(-0.2);
                 setLiftPower(0.5);
                 sleep(750);
                 holdLiftLocation();
                 mecanumDrive.stop();
+                setIntakePower(0);
 
                 strafeRight(allianceDistanceMultiplier * 34, 0.5);
 
@@ -194,14 +200,33 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 sleep(250);
                 holdLiftLocation();
 
-                driveForwards(80, 0.75);
+                driveForwards(1);
+
+                driveForwards(80, 0.85);
 
                 break;
         }
 
 
         mecanumDrive.setStrafe(Coordinate.fromXY(allianceDistanceMultiplier, 0), 0.25);
-        sleep(1250);
+        sleep(500);
+        mecanumDrive.stop();
+
+        setLiftPower(0.45);
+        setIntakePower(-1);
+        sleep(500);
+        holdLiftLocation();
+        sleep(500);
+        driveBackwards(8);
+        setIntakePower(0);
+        setLiftPower(-0.25);
+        sleep(250);
+        setLiftPower(0);
+
+        driveBackwards(14);
+
+        mecanumDrive.setStrafe(Coordinate.fromXY(allianceDistanceMultiplier, 0), 0.25);
+        sleep(1000);
         mecanumDrive.stop();
 
     }
