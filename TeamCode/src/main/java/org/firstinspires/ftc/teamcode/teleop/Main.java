@@ -93,7 +93,7 @@ public class Main extends OpMode {
         intakeServoRight = hardwareMap.crservo.get("intakeRight");
 
         foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
-        foundationServoLeft.setPosition(0.69); // Reset position
+        foundationServoLeft.setPosition(0.4); // Reset position
         foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
         foundationServoRight.setPosition(0.5);
 
@@ -126,11 +126,11 @@ public class Main extends OpMode {
 
         // FOUNDATION MOVER
         if (gamepad1.left_bumper) {
-            foundationServoLeft.setPosition(0.52);
-            foundationServoRight.setPosition(0.67);
+            foundationServoLeft.setPosition(0.5);
+            foundationServoRight.setPosition(0.6);
         } else if (gamepad1.right_bumper) {
-            foundationServoLeft.setPosition(0.69);
-            foundationServoRight.setPosition(0.5);
+            foundationServoLeft.setPosition(1);
+            foundationServoRight.setPosition(0.1);
         }
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
@@ -154,7 +154,6 @@ public class Main extends OpMode {
             intakeServoLeft.setPower(intakeServoPower);
             intakeServoRight.setPower(-intakeServoPower);
         }
-
         // SLIDES
 //        if (gamepad2.a || gamepad2.y) {
 //            if (moveLiftMotor == null || moveLiftMotor.isDone()) {
