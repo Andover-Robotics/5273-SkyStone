@@ -21,6 +21,8 @@ public class Main extends OpMode {
     private MecanumDrive mecanumDrive;
     private CRServo intakeServoLeft, intakeServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
+    private Servo sideClawArmLeft, sideClawFingerLeft;
+    private double sideClawArmPos, sideClawFingerPos;
     private final double SLOW_MODE = 0.3;
 
     boolean isFalling = false;
@@ -94,6 +96,7 @@ public class Main extends OpMode {
 
         foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
         foundationServoLeft.setPosition(0.4); // Reset position
+
         foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
         foundationServoRight.setPosition(0.5);
 
@@ -135,24 +138,24 @@ public class Main extends OpMode {
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
 
-        if (gamepad2.dpad_left)
-            intakeServoPower = -1;
-        else if (gamepad2.dpad_right)
+        if (gamepad2.right_bumper)
             intakeServoPower = 1;
+        else if (gamepad2.left_bumper)
+            intakeServoPower = -1;
 
         intakeServoLeft.setPower(intakeServoPower);
-        intakeServoRight.setPower(intakeServoPower);
+        intakeServoRight.setPower(-intakeServoPower);
 
         if (intakeServoPower == 0) {
             // ROTATE STONES
             // Left and right d-pad spins servos on intake both the same way to rotate stones
-            if (gamepad2.right_trigger > 0)
-                intakeServoPower = gamepad2.right_trigger;
-            else if (gamepad2.left_trigger > 0)
-                intakeServoPower = -gamepad2.left_trigger;
+            if (gamepad2.dpad_left)
+                intakeServoPower = -1;
+            else if (gamepad2.dpad_right)
+                intakeServoPower = 1;
 
             intakeServoLeft.setPower(intakeServoPower);
-            intakeServoRight.setPower(-intakeServoPower);
+            intakeServoRight.setPower(intakeServoPower);
         }
         // SLIDES
 //        if (gamepad2.a || gamepad2.y) {
@@ -164,12 +167,11 @@ public class Main extends OpMode {
         motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double slidePower = -gamepad2.left_stick_y;
+        double slidePower = -gamepad2.right_stick_y * 0.8;
 
         if (Math.abs(slidePower) <= 0.04)
             slidePower = 0.1;
         else if (slidePower < -0.04)
-
             slidePower = 0.0075;
 
         telemetry.addData("slidePower", slidePower);
@@ -178,6 +180,13 @@ public class Main extends OpMode {
         motorSlideLeft.setPower(slidePower);
         motorSlideRight.setPower(slidePower);
 
+        /*if(gamepad2.y) sideClawArmPos += 0.01;
+        if(gamepad2.b) sideClawArmPos -= 0.01;
+        if(gamepad2.x) sideClawFingerPos += 0.01;
+        if(gamepad2.a) sideClawFingerPos -= 0.01;
+
+        sideClawArmLeft.setPosition(sideClawArmPos);
+        sideClawFingerLeft.setPosition(sideClawFingerPos);*/
     }
 
     private void checkForInterrupt() throws InterruptedException {

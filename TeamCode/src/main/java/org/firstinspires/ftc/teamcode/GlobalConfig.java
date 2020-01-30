@@ -16,4 +16,8 @@ public final class GlobalConfig {
     // Ticks
     public final static int TICKS_PER_INCH = (int) Math.round((TICKS_PER_MOTOR_REVOLUTION / MECANUM_CIRCUMFERENCE_IN) * 1.5);
     public final static int TICKS_PER_360 = 2850;
+
+    // Left side claw positions
+    public final static double LEFT_SIDE_CLAW_ARM_UP = 0.26, LEFT_SIDE_CLAW_ARM_DOWN = 0;
+    public final static double LEFT_SIDE_CLAW_FINGER_OPEN = 0.7, LEFT_SIDE_CLAW_FINGER_CLOSE = 0;
 }

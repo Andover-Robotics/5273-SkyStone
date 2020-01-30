@@ -17,7 +17,7 @@ public class AutonomousMaster extends LinearOpMode {
     protected MecanumDrive mecanumDrive;
     protected SkystoneDetector skystoneDetector;
     private CRServo intakeServoLeft, intakeServoRight;
-    protected Servo foundationServoLeft, foundationServoRight;
+    protected Servo foundationServoLeft, foundationServoRight, leftSideClawArm, leftSideClawFinger;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
 
 
@@ -73,8 +73,14 @@ public class AutonomousMaster extends LinearOpMode {
         foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
         foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
 
-        foundationServoLeft.setPosition(0.9);
-        foundationServoRight.setPosition(0.2);
+        foundationServoLeft.setPosition(0.5);
+        foundationServoRight.setPosition(0.6);
+
+        leftSideClawArm = hardwareMap.servo.get("sideClawArmLeft");
+        leftSideClawFinger = hardwareMap.servo.get("sideClawFingerLeft");
+
+        leftSideClawArm.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+        leftSideClawFinger.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
 
         skystoneDetector = new SkystoneDetector(hardwareMap, 300, 230, 110);
         skystoneDetector.start();
@@ -160,7 +166,7 @@ public class AutonomousMaster extends LinearOpMode {
     }
 
     protected void holdLiftLocation() {
-        setLiftPower(0.07);
+        setLiftPower(0.1);
     }
 
     protected void setIntakePower(double power) {
