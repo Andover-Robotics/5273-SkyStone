@@ -21,9 +21,8 @@ public class Main extends OpMode {
     private MecanumDrive mecanumDrive;
     private CRServo intakeServoLeft, intakeServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
-    private Servo sideClawArmLeft, sideClawFingerLeft;
-    private double sideClawArmPos, sideClawFingerPos;
-    private final double SLOW_MODE = 0.3;
+    private Servo sideClawArmLeft, sideClawFingerLeft, sideClawArmRight, sideClawFingerRight;
+    private final double STRAFE_SLOW_MODE = 0.4, ROTATE_SLOW_MODE = 0.25, LIFT_SLOW_MODE = 0.3;
 
     boolean isFalling = false;
 
@@ -56,8 +55,8 @@ public class Main extends OpMode {
             motorSlideLeft.setTargetPosition(finalTicksInt);
             motorSlideRight.setTargetPosition(finalTicksInt);
 
-            motorSlideLeft.setPower(SLOW_MODE);
-            motorSlideRight.setPower(SLOW_MODE);
+            motorSlideLeft.setPower(LIFT_SLOW_MODE);
+            motorSlideRight.setPower(LIFT_SLOW_MODE);
 
             while (motorSlideLeft.isBusy() || motorSlideRight.isBusy()) {
                 telemetry.addData("Left Position", motorSlideLeft.getCurrentPosition());
@@ -106,6 +105,18 @@ public class Main extends OpMode {
         motorSlideRight.setTargetPosition(0);
 //        motorSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        motorSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        sideClawArmLeft = hardwareMap.servo.get("sideClawArmLeft");
+        sideClawFingerLeft = hardwareMap.servo.get("sideClawFingerLeft");
+
+        sideClawArmRight = hardwareMap.servo.get("sideClawArmRight");
+        sideClawFingerRight = hardwareMap.servo.get("sideClawFingerRight");
+
+        sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+        sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+
+        sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+        sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
     }
 
     @Override
@@ -114,18 +125,21 @@ public class Main extends OpMode {
         double strafe_x = -gamepad1.left_stick_x, strafe_y = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x;
 
         // SLOW MODE STRAFE WITH D-PAD
-        if (gamepad1.dpad_up) strafe_y = -SLOW_MODE;
-        if (gamepad1.dpad_right) strafe_x = -SLOW_MODE;
-        if (gamepad1.dpad_down) strafe_y = SLOW_MODE;
-        if (gamepad1.dpad_left) strafe_x = SLOW_MODE;
+        if (gamepad1.dpad_up) strafe_y = -STRAFE_SLOW_MODE;
+        if (gamepad1.dpad_right) strafe_x = -STRAFE_SLOW_MODE;
+        if (gamepad1.dpad_down) strafe_y = STRAFE_SLOW_MODE;
+        if (gamepad1.dpad_left) strafe_x = STRAFE_SLOW_MODE;
 
         // SLOW MODE ROTATION WITH X AND B BUTTONS
-        if (gamepad1.b) rotate_power = -SLOW_MODE;
-        if (gamepad1.x) rotate_power = SLOW_MODE;
+        if (gamepad1.b) rotate_power = -ROTATE_SLOW_MODE;
+        if (gamepad1.x) rotate_power = ROTATE_SLOW_MODE;
 
         Coordinate strafe = Coordinate.fromXY(strafe_x, strafe_y);
-        mecanumDrive.setStrafe(strafe);
-        mecanumDrive.setRotationPower(rotate_power);
+        if(Math.abs(strafe.getPolarDistance()) >= 0.02) {
+            mecanumDrive.setStrafeRotation(strafe,strafe.getPolarDistance(),rotate_power);
+        } else {
+            mecanumDrive.setRotationPower(rotate_power);
+        }
 
         // FOUNDATION MOVER
         if (gamepad1.left_bumper) {
@@ -187,6 +201,13 @@ public class Main extends OpMode {
 
         sideClawArmLeft.setPosition(sideClawArmPos);
         sideClawFingerLeft.setPosition(sideClawFingerPos);*/
+
+        if(gamepad1.start) {
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        }
     }
 
     private void checkForInterrupt() throws InterruptedException {

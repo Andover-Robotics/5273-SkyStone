@@ -19,5 +19,6 @@ public final class GlobalConfig {
 
     // Left side claw positions
     public final static double LEFT_SIDE_CLAW_ARM_UP = 0.26, LEFT_SIDE_CLAW_ARM_DOWN = 0;
-    public final static double LEFT_SIDE_CLAW_FINGER_OPEN = 0.7, LEFT_SIDE_CLAW_FINGER_CLOSE = 0;
+    public final static double RIGHT_SIDE_CLAW_ARM_UP = 0.74, RIGHT_SIDE_CLAW_ARM_DOWN = 1;
+    public final static double SIDE_CLAW_FINGER_OPEN = 0.7, SIDE_CLAW_FINGER_CLOSE = 0;
 }

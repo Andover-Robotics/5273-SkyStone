@@ -17,7 +17,8 @@ public class AutonomousMaster extends LinearOpMode {
     protected MecanumDrive mecanumDrive;
     protected SkystoneDetector skystoneDetector;
     private CRServo intakeServoLeft, intakeServoRight;
-    protected Servo foundationServoLeft, foundationServoRight, leftSideClawArm, leftSideClawFinger;
+    protected Servo foundationServoLeft, foundationServoRight;
+    protected Servo sideClawArmLeft, sideClawFingerLeft, sideClawArmRight, sideClawFingerRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
 
 
@@ -76,11 +77,17 @@ public class AutonomousMaster extends LinearOpMode {
         foundationServoLeft.setPosition(0.5);
         foundationServoRight.setPosition(0.6);
 
-        leftSideClawArm = hardwareMap.servo.get("sideClawArmLeft");
-        leftSideClawFinger = hardwareMap.servo.get("sideClawFingerLeft");
+        sideClawArmLeft = hardwareMap.servo.get("sideClawArmLeft");
+        sideClawFingerLeft = hardwareMap.servo.get("sideClawFingerLeft");
 
-        leftSideClawArm.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        leftSideClawFinger.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
+        sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+        sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+
+        sideClawArmRight = hardwareMap.servo.get("sideClawArmRight");
+        sideClawFingerRight = hardwareMap.servo.get("sideClawFingerRight");
+
+        sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+        sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
 
         skystoneDetector = new SkystoneDetector(hardwareMap, 300, 230, 110);
         skystoneDetector.start();

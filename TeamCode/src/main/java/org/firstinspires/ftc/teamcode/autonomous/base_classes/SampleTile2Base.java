@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.base_classes;
 
+import android.provider.Settings;
+
 import com.andoverrobotics.core.utilities.Coordinate;
 
 import org.firstinspires.ftc.teamcode.GlobalConfig;
@@ -71,16 +73,36 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 break;
         }
 
-        leftSideClawArm.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-        sleep(1000);
-        leftSideClawFinger.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_CLOSE);
-        sleep(1000);
-        leftSideClawArm.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        sleep(1000);
+        if(currentAlliance == RobotAlliance.RED) {
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+            sleep(1000);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+            sleep(1000);
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+            sleep(1000);
+        } else {
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+            sleep(1000);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+            sleep(1000);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+            sleep(1000);
+        }
 
         strafeRight(12 * allianceDistanceMultiplier, 0.5);
 
         driveForwards(distanceToDriveForward, 0.75);
+        strafeRight(30, 0.5);
+
+        if(currentAlliance == RobotAlliance.RED) {
+            sideClawArmLeft.setPosition((GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN+GlobalConfig.LEFT_SIDE_CLAW_ARM_UP)/2);
+            sleep(1000);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        } else {
+            sideClawArmRight.setPosition((GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN+GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP)/2);
+            sleep(1000);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        }
     }
 
 }
