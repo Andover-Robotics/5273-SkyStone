@@ -143,11 +143,11 @@ public class Main extends OpMode {
 
         // FOUNDATION MOVER
         if (gamepad1.left_bumper) {
-            foundationServoLeft.setPosition(0.5);
-            foundationServoRight.setPosition(0.6);
+            foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
+            foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
         } else if (gamepad1.right_bumper) {
-            foundationServoLeft.setPosition(1);
-            foundationServoRight.setPosition(0.1);
+            foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
+            foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
         }
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
