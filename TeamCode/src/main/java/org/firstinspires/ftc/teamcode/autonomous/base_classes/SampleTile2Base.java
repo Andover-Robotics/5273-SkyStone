@@ -10,7 +10,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        int allianceDistanceMultiplier = currentAlliance == RobotAlliance.BLUE ? 1 : -1;
+        int allianceDistanceMultiplier = currentAlliance == RobotAlliance.RED ? 1 : -1;
 
         driveForwards(6, 0.5);
         rotateCW(90 * allianceDistanceMultiplier, 0.5);
@@ -34,13 +34,14 @@ public abstract class SampleTile2Base extends AutonomousBase {
         while (skystoneLocation == null) {
             skystoneLocation = skystoneDetector.getSkystoneLocation();
 
+            telemetry.addLine("Scanning...");
             telemetry.addData("Skystone Location", skystoneLocation);
             telemetry.update();
 
             idle();
         }
 
-        if (currentAlliance == RobotAlliance.RED) {
+        if (currentAlliance == RobotAlliance.BLUE) {
             if (skystoneLocation == SkystoneLocation.LEFT)
                 skystoneLocation = SkystoneLocation.RIGHT;
             else if (skystoneLocation == SkystoneLocation.RIGHT)
@@ -54,8 +55,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
         telemetry.addData("Skystone Location", skystoneLocation);
         telemetry.update();
 
-
-        strafeLeft(22.5 * allianceDistanceMultiplier, 0.5);
+        strafeLeft(24 * allianceDistanceMultiplier, 0.5);
 
         mecanumDrive.setMovementPower(-0.3);
         sleep(750);
@@ -77,7 +77,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
                 break;
         }
 
-        if (currentAlliance == RobotAlliance.BLUE) {
+        if (currentAlliance == RobotAlliance.RED) {
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
             sleep(500);
             sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
@@ -93,13 +93,13 @@ public abstract class SampleTile2Base extends AutonomousBase {
             sleep(500);
         }
 
-        strafeRight(8.5 * allianceDistanceMultiplier, 0.5);
+        strafeRight(6 * allianceDistanceMultiplier, 0.5);
 
         driveForwards(distanceToDriveForward, 0.75);
 
-        strafeLeft(6*allianceDistanceMultiplier,0.5);
+        strafeLeft(12*allianceDistanceMultiplier,0.5);
 
-        if (currentAlliance == RobotAlliance.BLUE) {
+        if (currentAlliance == RobotAlliance.RED) {
             sideClawArmLeft.setPosition((GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN + GlobalConfig.LEFT_SIDE_CLAW_ARM_UP) / 2);
             sleep(300);
             sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
@@ -113,12 +113,14 @@ public abstract class SampleTile2Base extends AutonomousBase {
         strafeLeft(2 * allianceDistanceMultiplier, 0.5);
         strafeRight(7 * allianceDistanceMultiplier, 0.5);
 
-        if (currentAlliance == RobotAlliance.BLUE)
+        if (currentAlliance == RobotAlliance.RED)
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         else
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
 
-        setLiftPower(0.6);
+        driveBackwards(42,0.5);
+
+        /*setLiftPower(0.6);
         sleep(250);
         holdLiftLocation();
         rotateCCW(90, 0.5);
@@ -140,7 +142,7 @@ public abstract class SampleTile2Base extends AutonomousBase {
         holdLiftLocation();
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
-        mecanumDrive.driveBackwards(50,0.5);
+        mecanumDrive.driveBackwards(50,0.5);*/
         mecanumDrive.stop();
     }
 
