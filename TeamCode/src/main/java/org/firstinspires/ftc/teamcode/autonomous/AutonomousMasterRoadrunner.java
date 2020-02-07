@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.GlobalConfig;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDetector;
+import org.firstinspires.ftc.teamcode.vision.SkystoneLocation;
 
 import java.util.function.Function;
 
@@ -21,6 +22,7 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
     protected SkystoneDetector skystoneDetector;
     private CRServo intakeServoLeft, intakeServoRight;
     protected Servo foundationServoLeft, foundationServoRight, sideClawArmLeft, sideClawFingerLeft, sideClawArmRight, sideClawFingerRight;
+    protected SkystoneLocation lastStoneLocation;
     private DcMotor motorSlideLeft, motorSlideRight;
 
 
@@ -75,7 +77,7 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
         sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
         sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
 
-        skystoneDetector = new SkystoneDetector(hardwareMap, 300, 230, 110);
+        skystoneDetector = new SkystoneDetector(hardwareMap, 330, 215, 90);
         skystoneDetector.start();
 
         intakeServoLeft = hardwareMap.crservo.get("intakeLeft");
@@ -87,9 +89,7 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
     // This avoids timeouts and resolves a common bug that often results in loss of connection
     private void waitForStartWithPings() {
         while (!opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("Status", "WAITING");
-            telemetry.addData("Time", System.currentTimeMillis());
-            telemetry.update();
+            lastStoneLocation = scanForStone();
         }
 
         telemetry.update();
@@ -97,6 +97,39 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
 
     protected void drive(Function<TrajectoryBuilder, BaseTrajectoryBuilder> trajectory) {
         driveBase.followTrajectorySync(trajectory.apply(driveBase.trajectoryBuilder()).build());
+    }
+
+    protected SkystoneLocation scanForStone() {
+        skystoneDetector.setFlashLight(true);
+        SkystoneLocation skystoneLocation = skystoneDetector.getSkystoneLocation();
+
+        skystoneLocation = skystoneDetector.getSkystoneLocation();
+
+        telemetry.addLine("Scanning...");
+        telemetry.addData("Skystone Location", skystoneLocation);
+        telemetry.update();
+
+        return skystoneLocation;
+    }
+
+    protected SkystoneLocation swapSkystoneLocation(SkystoneLocation skystoneLocation) {
+        switch (skystoneLocation) {
+            case LEFT:
+                return SkystoneLocation.RIGHT;
+            case RIGHT:
+                return SkystoneLocation.LEFT;
+            default:
+                return skystoneLocation;
+        }
+    }
+
+    protected void setLiftPower(double power) {
+        motorSlideRight.setPower(power);
+        motorSlideLeft.setPower(power);
+    }
+
+    protected void holdLiftLocation() {
+        setLiftPower(0.1);
     }
 }
 

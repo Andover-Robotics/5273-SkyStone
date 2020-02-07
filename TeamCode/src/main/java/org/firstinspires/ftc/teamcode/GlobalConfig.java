@@ -9,6 +9,7 @@ public final class GlobalConfig {
     public final static double MECANUM_CIRCUMFERENCE_IN = MECANUM_CIRCUMFERENCE_MM / MM_PER_INCH;
     public final static double LIFT_PULLEY_DIAMETER_MM = 38, LIFT_PULLEY_RADIUS_MM = LIFT_PULLEY_DIAMETER_MM / 2;
     public final static double LIFE_STAGE_HEIGHT_IN = 5.5, INTAKE_STARTING_FLOOR_DISTANCE_MM = 5;
+    public final static double BOT_WIDTH_IN = 17, BOT_LENGTH_IN = 17;
 
     // Stone measurements
     public final static double STONE_LENGTH_IN = 8, STONE_WIDTH_IN = 4, STONE_HEIGHT_IN = 5;
