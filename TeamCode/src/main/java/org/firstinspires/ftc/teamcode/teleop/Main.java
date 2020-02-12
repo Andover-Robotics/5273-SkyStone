@@ -94,10 +94,10 @@ public class Main extends OpMode {
         intakeServoRight = hardwareMap.crservo.get("intakeRight");
 
         foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
-        foundationServoLeft.setPosition(0.4); // Reset position
+        foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP); // Reset position
 
         foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
-        foundationServoRight.setPosition(0.5);
+        foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
 
         mecanumDrive = MecanumDrive.fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, GlobalConfig.TICKS_PER_INCH, GlobalConfig.TICKS_PER_360);
 
@@ -142,10 +142,10 @@ public class Main extends OpMode {
         }
 
         // FOUNDATION MOVER
-        if (gamepad1.left_bumper) {
+        if (gamepad1.right_bumper) {
             foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
             foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
-        } else if (gamepad1.right_bumper) {
+        } else if (gamepad1.left_bumper) {
             foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
             foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
         }
