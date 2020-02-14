@@ -32,7 +32,7 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         final double endingPositionX = startingPositionX;
 
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(endingPositionX, 46 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(endingPositionX, 47 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
 
         if (currentAlliance == RobotAlliance.BLUE) {
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
@@ -43,7 +43,7 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
         }
 
         sleep(1500);
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).splineTo(new Pose2d(new Vector2d(24, 40 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).splineTo(new Pose2d(new Vector2d(34, 42 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
 
         //drive(bot -> bot.forward(2.25 * 24));
 
@@ -60,18 +60,22 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
         sleep(250);
 
         drive(bot -> bot.strafeLeft(15));
+        drive(bot -> bot.forward(15));
 
         setLiftPower(0.65);
-        driveBase.turnSync(-Math.PI / 2);
+        sleep(800);
         holdLiftLocation();
-        drive(bot -> bot.forward(13));
+        driveBase.turnSync(-Math.PI / 2);
+        drive(bot -> bot.forward(19));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
 
         setLiftPower(0.0075);
 
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(24 - GlobalConfig.BOT_LENGTH_IN / 2, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).reverse());
+        drive(bot -> bot.back(40));
+        driveBase.turnSync(2*Math.PI/3);
+        //drive(bot -> bot.splineTo(new Pose2d(new Vector2d(24 - GlobalConfig.BOT_LENGTH_IN / 2, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).reverse());
         setLiftPower(0);
 
         // TODO: Translate encoder-based auto to roadrunner
