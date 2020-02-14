@@ -53,7 +53,7 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(getMaxRpm());
+    public static double kV = 0.0190518019454494 / rpmToVelocity(getMaxRpm());
     public static double kA = 0;
     public static double kStatic = 0;
 
@@ -66,8 +66,8 @@ public class DriveConstants {
      * forces acceleration-limited profiling).
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
-            30.0, 30.0, 0.0,
-            Math.toRadians(180.0), Math.toRadians(180.0), 0.0
+            45.0, 30.0, 1.0,
+            50, 10.0, 1.0
     );
 
 
