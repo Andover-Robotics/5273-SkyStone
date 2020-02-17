@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousMaster;
 
-@Autonomous(name = "Park (Tile 3)", group = "AA")
 public class ParkTile3 extends AutonomousMaster {
     @Override
     public void runOpMode() throws InterruptedException {

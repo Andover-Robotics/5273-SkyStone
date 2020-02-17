@@ -24,6 +24,6 @@ public final class GlobalConfig {
     public final static double SIDE_CLAW_FINGER_OPEN = 0.65, SIDE_CLAW_FINGER_CLOSE = 0;
 
     // Foundation servo positions
-    public final static double FOUNDATION_SERVO_LEFT_UP = 0.5, FOUNDATION_SERVO_LEFT_DOWN = 1;
-    public final static double FOUNDATION_SERVO_RIGHT_UP = 0.6, FOUNDATION_SERVO_RIGHT_DOWN = 0.1;
+    public final static double FOUNDATION_SERVO_LEFT_UP = 0, FOUNDATION_SERVO_LEFT_DOWN = 1;
+    public final static double FOUNDATION_SERVO_RIGHT_UP = 0.81, FOUNDATION_SERVO_RIGHT_DOWN = 0.15;
 }

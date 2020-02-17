@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.GlobalConfig;
 import org.firstinspires.ftc.teamcode.autonomous.RobotAlliance;
 import org.firstinspires.ftc.teamcode.vision.SkystoneLocation;
+import org.opencv.core.Mat;
 
 public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner {
     @Override
@@ -42,12 +43,12 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
         }
 
-        sleep(1150);
+        sleep(750);
         drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).splineTo(new Pose2d(new Vector2d(34, 43  - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
 
         //drive(bot -> bot.forward(2.25 * 24));
 
-        drive(bot -> bot.strafeRight(8));
+        //drive(bot -> bot.strafeRight(8));
 
         if (currentAlliance == RobotAlliance.BLUE) {
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
@@ -59,22 +60,30 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         sleep(250);
 
-        drive(bot -> bot.strafeLeft(15));
-        drive(bot -> bot.forward(14));
-
-        driveBase.turnSync(-Math.PI * 1.1 / 2);
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(48,30+GlobalConfig.BOT_WIDTH_IN / 2),0)));
+        //drive(bot -> bot.strafeLeft(7));
+        //drive(bot -> bot.forward(10));
+        driveBase.turnSync(-Math.PI * 1.05 / 2);
         setLiftPower(0.6);
         sleep(750);
         holdLiftLocation();
-        drive(bot -> bot.forward(16));
+        drive(bot -> bot.forward(8.5));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
 
         setLiftPower(0.0075);
-        sleep(1200);
-        drive(bot -> bot.back(32));
-        driveBase.turnSync(1.3*Math.PI/2);
+        sleep(750);
+        driveBase.turnSync(Math.PI/2);
+        drive(bot -> bot.back(16));
+        driveBase.turnSync(Math.PI/2);
+        drive(bot -> bot.back(8));
+
+        foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
+        foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
+        //drive(bot -> bot.splineTo(new Pose2d(new Vector2d(12, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).reverse());
+        //drive(bot -> bot.back(32));
+        //driveBase.turnSync(1.3*Math.PI/2);
 
         setLiftPower(0);
 
