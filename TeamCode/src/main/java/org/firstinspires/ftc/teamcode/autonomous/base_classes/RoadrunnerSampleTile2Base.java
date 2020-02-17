@@ -32,7 +32,7 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         final double endingPositionX = startingPositionX;
 
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(endingPositionX, 47 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(endingPositionX, 46 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
 
         if (currentAlliance == RobotAlliance.BLUE) {
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
@@ -42,8 +42,8 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
         }
 
-        sleep(1500);
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).splineTo(new Pose2d(new Vector2d(34, 42 - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
+        sleep(1150);
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).splineTo(new Pose2d(new Vector2d(34, 43  - GlobalConfig.BOT_WIDTH_IN / 2), 0)));
 
         //drive(bot -> bot.forward(2.25 * 24));
 
@@ -60,22 +60,22 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
         sleep(250);
 
         drive(bot -> bot.strafeLeft(15));
-        drive(bot -> bot.forward(15));
+        drive(bot -> bot.forward(14));
 
-        setLiftPower(0.65);
-        sleep(800);
+        driveBase.turnSync(-Math.PI * 1.1 / 2);
+        setLiftPower(0.6);
+        sleep(750);
         holdLiftLocation();
-        driveBase.turnSync(-Math.PI / 2);
-        drive(bot -> bot.forward(19));
+        drive(bot -> bot.forward(16));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
 
         setLiftPower(0.0075);
+        sleep(1200);
+        drive(bot -> bot.back(32));
+        driveBase.turnSync(1.3*Math.PI/2);
 
-        drive(bot -> bot.back(40));
-        driveBase.turnSync(2*Math.PI/3);
-        //drive(bot -> bot.splineTo(new Pose2d(new Vector2d(24 - GlobalConfig.BOT_LENGTH_IN / 2, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).reverse());
         setLiftPower(0);
 
         // TODO: Translate encoder-based auto to roadrunner
