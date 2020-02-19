@@ -24,6 +24,8 @@ public class Main extends OpMode {
     private Servo sideClawArmLeft, sideClawFingerLeft, sideClawArmRight, sideClawFingerRight;
     private final double STRAFE_SLOW_MODE = 0.4, ROTATE_SLOW_MODE = 0.25, LIFT_SLOW_MODE = 0.3;
 
+    private boolean leftArmOpen, leftFingerOpen, rightArmOpen, rightFingerOpen;
+
     boolean isFalling = false;
 
     private Future<?> moveLiftMotor;
@@ -117,6 +119,11 @@ public class Main extends OpMode {
 
         sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
         sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+
+        leftArmOpen = true;
+        leftFingerOpen = true;
+        rightArmOpen = true;
+        rightFingerOpen = true;
     }
 
     @Override
@@ -152,9 +159,9 @@ public class Main extends OpMode {
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
 
-        if (gamepad2.right_bumper)
+        if (gamepad2.right_trigger > 0.05)
             intakeServoPower = 1;
-        else if (gamepad2.left_bumper)
+        else if (gamepad2.left_trigger > 0.05)
             intakeServoPower = -1;
 
         intakeServoLeft.setPower(intakeServoPower);
@@ -181,7 +188,7 @@ public class Main extends OpMode {
         motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double slidePower = -gamepad2.right_stick_y * 0.8;
+        double slidePower = -gamepad2.left_stick_y * 0.8;
 
         if (Math.abs(slidePower) <= 0.04)
             slidePower = 0.1;
@@ -207,6 +214,51 @@ public class Main extends OpMode {
             sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
             sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+
+            leftArmOpen = true;
+            leftFingerOpen = true;
+            rightArmOpen = true;
+            rightFingerOpen = true;
+        }
+
+        if(gamepad2.x) {
+            if(leftArmOpen) {
+                sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+                leftArmOpen = false;
+            } else {
+                sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+                leftArmOpen = true;
+            }
+        }
+
+        if(gamepad2.y) {
+            if(leftFingerOpen) {
+                sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+                leftFingerOpen = false;
+            } else {
+                sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+                leftFingerOpen = true;
+            }
+        }
+
+        if(gamepad2.b) {
+            if(rightArmOpen) {
+                sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+                rightArmOpen = false;
+            } else {
+                sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+                rightArmOpen = true;
+            }
+        }
+
+        if(gamepad2.a) {
+            if(rightFingerOpen) {
+                sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+                rightFingerOpen = false;
+            } else {
+                sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+                rightFingerOpen = true;
+            }
         }
     }
 

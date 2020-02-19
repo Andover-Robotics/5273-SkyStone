@@ -74,8 +74,8 @@ public class AutonomousMaster extends LinearOpMode {
         foundationServoLeft = hardwareMap.servo.get("foundationMoverLeft");
         foundationServoRight = hardwareMap.servo.get("foundationMoverRight");
 
-        foundationServoLeft.setPosition(0.5);
-        foundationServoRight.setPosition(0.6);
+        foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
+        foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
 
         sideClawArmLeft = hardwareMap.servo.get("sideClawArmLeft");
         sideClawFingerLeft = hardwareMap.servo.get("sideClawFingerLeft");
