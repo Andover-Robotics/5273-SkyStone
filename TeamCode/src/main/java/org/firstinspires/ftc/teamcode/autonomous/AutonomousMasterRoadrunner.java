@@ -131,5 +131,41 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
     protected void holdLiftLocation() {
         setLiftPower(0.1);
     }
+
+    protected void grabStone(RobotAlliance currentAlliance, int armLiftDelay) {
+        if (currentAlliance == RobotAlliance.BLUE) {
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+            sleep(250);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+            sleep(1000);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+        } else {
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+            sleep(250);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+            sleep(750);
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+        }
+
+        sleep(armLiftDelay);
+    }
+
+    protected void placeStone(RobotAlliance currentAlliance, int armLiftDelay) {
+        if (currentAlliance == RobotAlliance.BLUE) {
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+            sleep(250);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sleep(500);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+        } else {
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+            sleep(250);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sleep(500);
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+        }
+
+        sleep(armLiftDelay);
+    }
 }
 

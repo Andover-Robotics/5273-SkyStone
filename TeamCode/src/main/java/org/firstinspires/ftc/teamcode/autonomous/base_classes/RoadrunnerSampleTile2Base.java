@@ -13,140 +13,89 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
     public void runOpMode() throws InterruptedException {
         super.runOpMode(); // Initializes and configures
 
+        checkForStop();
+
         int allianceDistanceMultiplier = currentAlliance == RobotAlliance.BLUE ? 1 : -1;
 
         while (lastStoneLocation == null) {
             lastStoneLocation = scanForStone();
         }
 
+        if (currentAlliance == RobotAlliance.BLUE)
+            lastStoneLocation = swapSkystoneLocation(lastStoneLocation);
+
         // Start at tile 2, facing the building zone, against the wall
         double startingPositionX = -48 + GlobalConfig.BOT_LENGTH_IN / 2;
 
-        driveBase.setPoseEstimate(new Pose2d(new Vector2d(-48 + GlobalConfig.BOT_LENGTH_IN / 2, allianceDistanceMultiplier * (72 - GlobalConfig.BOT_WIDTH_IN / 2)), 0));
+        driveBase.setPoseEstimate(new Pose2d(new Vector2d(startingPositionX, allianceDistanceMultiplier * (72 - GlobalConfig.BOT_WIDTH_IN / 2)), 0));
 
         skystoneDetector.setFlashLight(false);
         skystoneDetector.stop();
 
-        if (lastStoneLocation == SkystoneLocation.MIDDLE) {
-            startingPositionX += 8;
-        } else if (currentAlliance == RobotAlliance.BLUE && lastStoneLocation == SkystoneLocation.LEFT || currentAlliance == RobotAlliance.RED && lastStoneLocation == SkystoneLocation.RIGHT) {
-            startingPositionX += 16;
+        //drive(bot -> bot.strafeRight(allianceDistanceMultiplier * (42.5 - GlobalConfig.BOT_WIDTH_IN / 2)));
+
+        final double distanceToAlignWithStone;
+
+        switch (lastStoneLocation) {
+            case RIGHT:
+                distanceToAlignWithStone = 12.5;
+                break;
+            case MIDDLE:
+                distanceToAlignWithStone = 3.5;
+                break;
+            default:
+                distanceToAlignWithStone = -4;
+                break;
         }
 
-        final double endingPositionX = startingPositionX;
+        checkForStop();
 
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(endingPositionX,  allianceDistanceMultiplier * (45.25 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
+        drive(bot -> bot.strafeTo(new Vector2d(startingPositionX + distanceToAlignWithStone, allianceDistanceMultiplier * (18.5 + GlobalConfig.BOT_WIDTH_IN / 2))));
 
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-            sleep(1000);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(500);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-            sleep(1000);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
+        grabStone(currentAlliance, 500);
 
-        sleep(1000);
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (48 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(35, allianceDistanceMultiplier * (41.875  - GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
+        Pose2d underBridge = new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (46 - GlobalConfig.BOT_WIDTH_IN / 2)), 0);
+        double foundationPlaceY = allianceDistanceMultiplier * (44 - GlobalConfig.BOT_WIDTH_IN / 2);
 
-        //drive(bot -> bot.forward(2.25 * 24));
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(37, foundationPlaceY), 0)));
 
-        //drive(bot -> bot.strafeRight(8));
+        placeStone(currentAlliance, 250);
 
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(500);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(500);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
+        final double finalSkystoneX = -72 + (lastStoneLocation.getNumericalValue() * 8 + (lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
 
-        sleep(250);
+        drive(bot -> bot.reverse().splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (49 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(finalSkystoneX, allianceDistanceMultiplier * (25 + GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
 
-        //drive(bot -> bot.splineTo(new Pose2d(new Vector2d(48,allianceDistanceMultiplier * (30+GlobalConfig.BOT_WIDTH_IN / 2)),0)));
-        //drive(bot -> bot.strafeLeft(7));
-        //drive(bot -> bot.forward(10));
+        grabStone(currentAlliance, 500);
 
-        // s n a t ch foundation
-        /*
-        driveBase.turnSync(allianceDistanceMultiplier * (-Math.PI) * 1.05 / 2);
-        setLiftPower(0.6);
-        sleep(750);
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(23, foundationPlaceY * 1.125), 0)).splineTo(new Pose2d(new Vector2d(45.5, foundationPlaceY - 2 * allianceDistanceMultiplier), 0)));
+
+        placeStone(currentAlliance, 250);
+
+        drive(bot -> bot.forward(4));
+
+        setLiftPower(0.65);
+        driveBase.turnSync(allianceDistanceMultiplier * -Math.PI / 2);
         holdLiftLocation();
-        drive(bot -> bot.forward(8.5));
+
+        drive(bot -> bot.forward(6));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
 
-        setLiftPower(0.0075);
-        sleep(750);*/
+        sleep(500);
 
-        // put near bridge
-        /*driveBase.turnSync(allianceDistanceMultiplier * Math.PI/2);
-        drive(bot -> bot.back(16));
-        driveBase.turnSync(allianceDistanceMultiplier * Math.PI/2);
-        drive(bot -> bot.back(8));*/
+        drive(bot -> bot.back(30));
 
-        // put in building zone
-        /*drive(bot -> bot.back(32));
-        driveBase.turnSync(allianceDistanceMultiplier * 1.3*Math.PI/2);
+        driveBase.turnSync(allianceDistanceMultiplier * Math.PI);
+
+        drive(bot -> bot.forward(8));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
-        foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);*/
+        foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
 
-        //drive(bot -> bot.reverse().splineTo(new Pose2d(new Vector2d(endingPositionX - 16, allianceDistanceMultiplier * 46 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
-        drive(bot -> bot.reverse().splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (48 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(endingPositionX - 16, allianceDistanceMultiplier * (43 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
-
-
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-            sleep(1000);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(500);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-            sleep(1000);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
-
-        sleep(1000);
-        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (48 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(40, allianceDistanceMultiplier * (41  - GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
-
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(500);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(500);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
-
-        //drive(bot -> bot.splineTo(new Pose2d(new Vector2d(12, 48 - GlobalConfig.BOT_WIDTH_IN / 2), 0)).reverse());
-        //drive(bot -> bot.back(32));
-        //driveBase.turnSync(1.3*Math.PI/2);
-
+        setLiftPower(0.0075);
+        drive(bot -> bot.reverse().splineTo(underBridge));
         setLiftPower(0);
-
-        // TODO: Translate encoder-based auto to roadrunner
     }
 
 }

@@ -129,39 +129,86 @@ public class Main extends OpMode {
     @Override
     public void loop() {
         // MOVEMENT (DRIVING/STRAFING AND ROTATION)
-        double strafe_x = -gamepad1.left_stick_x, strafe_y = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x;
+        double gp1LeftStickX = -gamepad1.left_stick_x, gp1LeftStickY = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x, gp2RightTrigger = gamepad2.right_trigger, gp2LeftTrigger = gamepad2.left_trigger, gp2LeftStickY = gamepad2.left_stick_y;
+        boolean gp1RightBumper = gamepad1.right_bumper, gp1LeftBumper = gamepad1.left_bumper, gp2DPLeft = gamepad2.dpad_left, gp2DPRight = gamepad2.dpad_right, gp1Start = gamepad1.start, gp2X = gamepad2.x, gp2Y = gamepad2.y, gp2B = gamepad2.b, gp2A = gamepad2.a, gp1DPUp = gamepad1.dpad_up, gp1DPRight = gamepad1.dpad_right, gp1DPLeft = gamepad1.dpad_left, gp1DPDown = gamepad1.dpad_down, gp1X = gamepad1.x, gp1B = gamepad1.b, gp2RightJoystick = gamepad2.right_stick_button, gp2LeftJoystick = gamepad2.left_stick_button;
+
+        if (gp1Start) {
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+
+            leftArmOpen = true;
+            leftFingerOpen = true;
+            rightArmOpen = true;
+            rightFingerOpen = true;
+        }
+
+        if (gp2X) {
+            sideClawArmLeft.setPosition(leftArmOpen ? GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+            leftArmOpen = !leftArmOpen;
+        }
+
+        if (gp2Y) {
+            sideClawFingerLeft.setPosition(leftFingerOpen ? GlobalConfig.SIDE_CLAW_FINGER_CLOSE : GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            leftFingerOpen = !leftFingerOpen;
+        }
+
+        if (gp2B) {
+            sideClawArmRight.setPosition(rightArmOpen ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+            rightArmOpen = !rightArmOpen;
+        }
+
+        if (gp2A) {
+            sideClawFingerRight.setPosition(rightFingerOpen ? GlobalConfig.SIDE_CLAW_FINGER_CLOSE : GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            rightFingerOpen = !rightFingerOpen;
+        }
+
+        if(gp2RightJoystick) {
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OUT);
+            rightArmOpen = false;
+            rightFingerOpen = false;
+        }
+
+        if(gp2LeftJoystick) {
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OUT);
+            leftArmOpen = false;
+            leftFingerOpen = false;
+        }
 
         // SLOW MODE STRAFE WITH D-PAD
-        if (gamepad1.dpad_up) strafe_y = -STRAFE_SLOW_MODE;
-        if (gamepad1.dpad_right) strafe_x = -STRAFE_SLOW_MODE;
-        if (gamepad1.dpad_down) strafe_y = STRAFE_SLOW_MODE;
-        if (gamepad1.dpad_left) strafe_x = STRAFE_SLOW_MODE;
+        if (gp1DPUp) gp1LeftStickY = -STRAFE_SLOW_MODE;
+        else if (gp1DPDown) gp1LeftStickY = STRAFE_SLOW_MODE;
+        if (gp1DPRight) gp1LeftStickX = -STRAFE_SLOW_MODE;
+        else if (gp1DPLeft) gp1LeftStickX = STRAFE_SLOW_MODE;
 
         // SLOW MODE ROTATION WITH X AND B BUTTONS
-        if (gamepad1.b) rotate_power = -ROTATE_SLOW_MODE;
-        if (gamepad1.x) rotate_power = ROTATE_SLOW_MODE;
+        if (gp1B) rotate_power = -ROTATE_SLOW_MODE;
+        else if (gp1X) rotate_power = ROTATE_SLOW_MODE;
 
-        Coordinate strafe = Coordinate.fromXY(strafe_x, strafe_y);
-        if(Math.abs(strafe.getPolarDistance()) >= 0.02) {
-            mecanumDrive.setStrafeRotation(strafe,strafe.getPolarDistance(),rotate_power);
+        Coordinate strafe = Coordinate.fromXY(gp1LeftStickX, gp1LeftStickY);
+        if (Math.abs(strafe.getPolarDistance()) >= 0.02) {
+            mecanumDrive.setStrafeRotation(strafe, strafe.getPolarDistance(), rotate_power);
         } else {
             mecanumDrive.setRotationPower(rotate_power);
         }
 
         // FOUNDATION MOVER
-        if (gamepad1.right_bumper) {
+        if (gp1RightBumper) {
             foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
             foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
-        } else if (gamepad1.left_bumper) {
+        } else if (gp1LeftBumper) {
             foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
             foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
         }
         // INTAKE AND OUTPUT
         double intakeServoPower = 0;
 
-        if (gamepad2.right_trigger > 0.05)
+        if (gp2RightTrigger > 0.05)
             intakeServoPower = 1;
-        else if (gamepad2.left_trigger > 0.05)
+        else if (gp2LeftTrigger > 0.05)
             intakeServoPower = -1;
 
         intakeServoLeft.setPower(intakeServoPower);
@@ -170,9 +217,9 @@ public class Main extends OpMode {
         if (intakeServoPower == 0) {
             // ROTATE STONES
             // Left and right d-pad spins servos on intake both the same way to rotate stones
-            if (gamepad2.dpad_left)
+            if (gp2DPLeft)
                 intakeServoPower = -1;
-            else if (gamepad2.dpad_right)
+            else if (gp2DPRight)
                 intakeServoPower = 1;
 
             intakeServoLeft.setPower(intakeServoPower);
@@ -188,7 +235,7 @@ public class Main extends OpMode {
         motorSlideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double slidePower = -gamepad2.left_stick_y * 0.8;
+        double slidePower = -gp2LeftStickY * 0.8;
 
         if (Math.abs(slidePower) <= 0.04)
             slidePower = 0.1;
@@ -208,58 +255,6 @@ public class Main extends OpMode {
 
         sideClawArmLeft.setPosition(sideClawArmPos);
         sideClawFingerLeft.setPosition(sideClawFingerPos);*/
-
-        if(gamepad1.start) {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-
-            leftArmOpen = true;
-            leftFingerOpen = true;
-            rightArmOpen = true;
-            rightFingerOpen = true;
-        }
-
-        if(gamepad2.x) {
-            if(leftArmOpen) {
-                sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-                leftArmOpen = false;
-            } else {
-                sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-                leftArmOpen = true;
-            }
-        }
-
-        if(gamepad2.y) {
-            if(leftFingerOpen) {
-                sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-                leftFingerOpen = false;
-            } else {
-                sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-                leftFingerOpen = true;
-            }
-        }
-
-        if(gamepad2.b) {
-            if(rightArmOpen) {
-                sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-                rightArmOpen = false;
-            } else {
-                sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-                rightArmOpen = true;
-            }
-        }
-
-        if(gamepad2.a) {
-            if(rightFingerOpen) {
-                sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-                rightFingerOpen = false;
-            } else {
-                sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-                rightFingerOpen = true;
-            }
-        }
     }
 
     private void checkForInterrupt() throws InterruptedException {
