@@ -129,7 +129,7 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
     }
 
     protected void holdLiftLocation() {
-        setLiftPower(0.1);
+        setLiftPower(0.15);
     }
 
     protected void grabStone(RobotAlliance currentAlliance, int armLiftDelay) {

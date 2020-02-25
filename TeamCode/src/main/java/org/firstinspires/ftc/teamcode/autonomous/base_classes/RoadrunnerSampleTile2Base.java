@@ -50,34 +50,38 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         checkForStop();
 
-        drive(bot -> bot.strafeTo(new Vector2d(startingPositionX + distanceToAlignWithStone, allianceDistanceMultiplier * (18.5 + GlobalConfig.BOT_WIDTH_IN / 2))));
+        drive(bot -> bot.strafeTo(new Vector2d(startingPositionX + distanceToAlignWithStone, allianceDistanceMultiplier * (19 + GlobalConfig.BOT_WIDTH_IN / 2))));
 
         grabStone(currentAlliance, 500);
 
-        Pose2d underBridge = new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (46 - GlobalConfig.BOT_WIDTH_IN / 2)), 0);
-        double foundationPlaceY = allianceDistanceMultiplier * (44 - GlobalConfig.BOT_WIDTH_IN / 2);
+        Pose2d underBridge = new Pose2d(new Vector2d(6, allianceDistanceMultiplier * (46 - GlobalConfig.BOT_WIDTH_IN / 2)), 0);
+        double foundationPlaceY = allianceDistanceMultiplier * (43.5 - GlobalConfig.BOT_WIDTH_IN / 2);
 
-        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(37, foundationPlaceY), 0)));
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(45, foundationPlaceY), 0)));
 
         placeStone(currentAlliance, 250);
 
-        final double finalSkystoneX = -72 + (lastStoneLocation.getNumericalValue() * 8 + (lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
+        final double finalSkystoneX = -70.5 + (lastStoneLocation.getNumericalValue() * 8 + (lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
 
-        drive(bot -> bot.reverse().splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (49 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(finalSkystoneX, allianceDistanceMultiplier * (25 + GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
-
+        drive(bot -> bot.reverse().splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (49 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(finalSkystoneX, allianceDistanceMultiplier * (26.5 + GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
+        if(lastStoneLocation == SkystoneLocation.LEFT){
+            driveBase.turnSync(allianceDistanceMultiplier * -Math.PI/8);
+        }
         grabStone(currentAlliance, 500);
-
-        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(23, foundationPlaceY * 1.125), 0)).splineTo(new Pose2d(new Vector2d(45.5, foundationPlaceY - 2 * allianceDistanceMultiplier), 0)));
+        if(lastStoneLocation == SkystoneLocation.LEFT){
+            driveBase.turnSync(allianceDistanceMultiplier * Math.PI/8);
+        }
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(36, foundationPlaceY - 1 * allianceDistanceMultiplier), 0)));
 
         placeStone(currentAlliance, 250);
 
-        drive(bot -> bot.forward(4));
+        drive(bot -> bot.forward(20));
 
         setLiftPower(0.65);
-        driveBase.turnSync(allianceDistanceMultiplier * -Math.PI / 2);
+        driveBase.turnSync(allianceDistanceMultiplier * -11*Math.PI / 18);
         holdLiftLocation();
 
-        drive(bot -> bot.forward(6));
+        drive(bot -> bot.forward(13));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_DOWN);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_DOWN);
@@ -86,15 +90,16 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         drive(bot -> bot.back(30));
 
-        driveBase.turnSync(allianceDistanceMultiplier * Math.PI);
+        driveBase.turnSync(allianceDistanceMultiplier * 3*Math.PI/4);
 
-        drive(bot -> bot.forward(8));
+        //drive(bot -> bot.forward(8));
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
 
-        setLiftPower(0.0075);
+
         drive(bot -> bot.reverse().splineTo(underBridge));
+        setLiftPower(0.75);
         setLiftPower(0);
     }
 

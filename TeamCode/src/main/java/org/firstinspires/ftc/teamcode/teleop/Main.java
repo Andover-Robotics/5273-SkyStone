@@ -21,7 +21,7 @@ public class Main extends OpMode {
     private MecanumDrive mecanumDrive;
     private CRServo intakeServoLeft, intakeServoRight;
     private DcMotor motorFL, motorFR, motorBL, motorBR, motorSlideLeft, motorSlideRight;
-    private Servo sideClawArmLeft, sideClawFingerLeft, sideClawArmRight, sideClawFingerRight;
+    private Servo sideClawArmLeft, sideClawFingerLeft, sideClawArmRight, sideClawFingerRight, capstoneMover, capstoneHolder;
     private final double STRAFE_SLOW_MODE = 0.4, ROTATE_SLOW_MODE = 0.25, LIFT_SLOW_MODE = 0.3;
 
     private boolean leftArmOpen, leftFingerOpen, rightArmOpen, rightFingerOpen;
@@ -120,6 +120,14 @@ public class Main extends OpMode {
         sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
         sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
 
+        capstoneMover = hardwareMap.servo.get("capstoneMover");
+
+        capstoneMover.setPosition(0);
+
+        capstoneHolder = hardwareMap.servo.get("capstoneHolder");
+
+        capstoneHolder.setPosition(1);
+
         leftArmOpen = true;
         leftFingerOpen = true;
         rightArmOpen = true;
@@ -129,8 +137,8 @@ public class Main extends OpMode {
     @Override
     public void loop() {
         // MOVEMENT (DRIVING/STRAFING AND ROTATION)
-        double gp1LeftStickX = -gamepad1.left_stick_x, gp1LeftStickY = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x, gp2RightTrigger = gamepad2.right_trigger, gp2LeftTrigger = gamepad2.left_trigger, gp2LeftStickY = gamepad2.left_stick_y;
-        boolean gp1RightBumper = gamepad1.right_bumper, gp1LeftBumper = gamepad1.left_bumper, gp2DPLeft = gamepad2.dpad_left, gp2DPRight = gamepad2.dpad_right, gp1Start = gamepad1.start, gp2X = gamepad2.x, gp2Y = gamepad2.y, gp2B = gamepad2.b, gp2A = gamepad2.a, gp1DPUp = gamepad1.dpad_up, gp1DPRight = gamepad1.dpad_right, gp1DPLeft = gamepad1.dpad_left, gp1DPDown = gamepad1.dpad_down, gp1X = gamepad1.x, gp1B = gamepad1.b, gp2RightJoystick = gamepad2.right_stick_button, gp2LeftJoystick = gamepad2.left_stick_button;
+        double gp1LeftStickX = -gamepad1.left_stick_x, gp1LeftStickY = gamepad1.left_stick_y, rotate_power = -gamepad1.right_stick_x, gp2RightTrigger = gamepad2.right_trigger, gp2LeftTrigger = gamepad2.left_trigger, gp2LeftStickY = gamepad2.left_stick_y, gp2RightStickX = gamepad2.right_stick_x;
+        boolean gp1RightBumper = gamepad1.right_bumper, gp1LeftBumper = gamepad1.left_bumper, gp2RightBumper = gamepad2.right_bumper, gp2LeftBumper = gamepad2.left_bumper, gp2DPUp = gamepad2.dpad_up, gp2DPDown = gamepad2.dpad_down, gp1Start = gamepad1.start, gp2X = gamepad2.x, gp2Y = gamepad2.y, gp2B = gamepad2.b, gp2A = gamepad2.a, gp1DPUp = gamepad1.dpad_up, gp1DPRight = gamepad1.dpad_right, gp1DPLeft = gamepad1.dpad_left, gp1DPDown = gamepad1.dpad_down, gp1X = gamepad1.x, gp1B = gamepad1.b, gp2RightJoystick = gamepad2.right_stick_button, gp2LeftJoystick = gamepad2.left_stick_button;
 
         if (gp1Start) {
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
@@ -164,14 +172,14 @@ public class Main extends OpMode {
             rightFingerOpen = !rightFingerOpen;
         }
 
-        if(gp2RightJoystick) {
+        if(gp2RightBumper) {
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
             sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OUT);
             rightArmOpen = false;
             rightFingerOpen = false;
         }
 
-        if(gp2LeftJoystick) {
+        if(gp2LeftBumper) {
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
             sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OUT);
             leftArmOpen = false;
@@ -217,9 +225,9 @@ public class Main extends OpMode {
         if (intakeServoPower == 0) {
             // ROTATE STONES
             // Left and right d-pad spins servos on intake both the same way to rotate stones
-            if (gp2DPLeft)
+            if (gp2RightStickX == -1)
                 intakeServoPower = -1;
-            else if (gp2DPRight)
+            else if (gp2RightStickX == 1)
                 intakeServoPower = 1;
 
             intakeServoLeft.setPower(intakeServoPower);
@@ -238,7 +246,7 @@ public class Main extends OpMode {
         double slidePower = -gp2LeftStickY * 0.8;
 
         if (Math.abs(slidePower) <= 0.04)
-            slidePower = 0.1;
+            slidePower = 0.15;
         else if (slidePower < -0.04)
             slidePower = 0.0075;
 
@@ -247,6 +255,12 @@ public class Main extends OpMode {
 
         motorSlideLeft.setPower(slidePower);
         motorSlideRight.setPower(slidePower);
+
+        //Capstone Mover
+        if(gp2DPUp) capstoneMover.setPosition(0.5);
+        if(gp2DPDown) capstoneMover.setPosition(0);
+        if(gp2RightJoystick) capstoneHolder.setPosition(0);
+        if (gp2LeftJoystick) capstoneHolder.setPosition(1);
 
         /*if(gamepad2.y) sideClawArmPos += 0.01;
         if(gamepad2.b) sideClawArmPos -= 0.01;
