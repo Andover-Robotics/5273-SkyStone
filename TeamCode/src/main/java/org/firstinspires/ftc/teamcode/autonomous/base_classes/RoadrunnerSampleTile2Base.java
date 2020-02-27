@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous.base_classes;
 
+import android.provider.Settings;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 
 import org.firstinspires.ftc.teamcode.GlobalConfig;
 import org.firstinspires.ftc.teamcode.autonomous.RobotAlliance;
@@ -34,9 +37,24 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         //drive(bot -> bot.strafeRight(allianceDistanceMultiplier * (42.5 - GlobalConfig.BOT_WIDTH_IN / 2)));
 
+        final double firstSkystoneX = -72 + (lastStoneLocation.getNumericalValue() * 8 + 4 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK); //(lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
+
+        checkForStop();
+
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(firstSkystoneX, allianceDistanceMultiplier * (16 + GlobalConfig.BOT_WIDTH_IN / 2)), 0), new ConstantInterpolator(0)));
+
+        grabStone(currentAlliance, 500);
+
+        Pose2d underBridge = new Pose2d(new Vector2d(6, allianceDistanceMultiplier * (46 - GlobalConfig.BOT_WIDTH_IN / 2)), 0);
+        double foundationPlaceY = (41.5 - GlobalConfig.BOT_WIDTH_IN / 2);
+
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(28 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK, allianceDistanceMultiplier * foundationPlaceY), 0)));
+
+        placeStone(currentAlliance, 250);
+
         final double distanceToAlignWithStone;
 
-        switch (lastStoneLocation) {
+        /*switch (lastStoneLocation) {
             case RIGHT:
                 distanceToAlignWithStone = 12.5;
                 break;
@@ -46,22 +64,9 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
             default:
                 distanceToAlignWithStone = -4;
                 break;
-        }
+        }*/
 
-        checkForStop();
-
-        drive(bot -> bot.strafeTo(new Vector2d(startingPositionX + distanceToAlignWithStone, allianceDistanceMultiplier * (19 + GlobalConfig.BOT_WIDTH_IN / 2))));
-
-        grabStone(currentAlliance, 500);
-
-        Pose2d underBridge = new Pose2d(new Vector2d(6, allianceDistanceMultiplier * (46 - GlobalConfig.BOT_WIDTH_IN / 2)), 0);
-        double foundationPlaceY = allianceDistanceMultiplier * (43.5 - GlobalConfig.BOT_WIDTH_IN / 2);
-
-        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(45, foundationPlaceY), 0)));
-
-        placeStone(currentAlliance, 250);
-
-        final double finalSkystoneX = -70.5 + (lastStoneLocation.getNumericalValue() * 8 + (lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
+        final double finalSkystoneX = firstSkystoneX + 24;
 
         drive(bot -> bot.reverse().splineTo(new Pose2d(new Vector2d(0, allianceDistanceMultiplier * (49 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)).splineTo(new Pose2d(new Vector2d(finalSkystoneX, allianceDistanceMultiplier * (26.5 + GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
         if(lastStoneLocation == SkystoneLocation.LEFT){
@@ -71,7 +76,7 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
         if(lastStoneLocation == SkystoneLocation.LEFT){
             driveBase.turnSync(allianceDistanceMultiplier * Math.PI/8);
         }
-        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(36, foundationPlaceY - 1 * allianceDistanceMultiplier), 0)));
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(36, foundationPlaceY), 0)));
 
         placeStone(currentAlliance, 250);
 
@@ -94,12 +99,13 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         //drive(bot -> bot.forward(8));
 
+        setLiftPower(0.007);
+
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
 
 
         drive(bot -> bot.reverse().splineTo(underBridge));
-        setLiftPower(0.75);
         setLiftPower(0);
     }
 
