@@ -27,4 +27,10 @@ public final class GlobalConfig {
     // Foundation servo positions
     public final static double FOUNDATION_SERVO_LEFT_UP = 0, FOUNDATION_SERVO_LEFT_DOWN = 0.66;
     public final static double FOUNDATION_SERVO_RIGHT_UP = 1, FOUNDATION_SERVO_RIGHT_DOWN = 0.33;
+
+    // Capstone servo  positions
+    public final static double CAPSTONE_MOVER_DROP = 0.5;
+    public final static double CAPSTONE_MOVER_HOLD = 0;
+    public final static double CAPSTONE_HOLDER_UNLOCK = 0.65;
+    public final static double CAPSTONE_HOLDER_LOCK = 0.9;
 }

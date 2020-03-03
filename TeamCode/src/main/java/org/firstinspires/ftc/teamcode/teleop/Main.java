@@ -257,10 +257,10 @@ public class Main extends OpMode {
         motorSlideRight.setPower(slidePower);
 
         //Capstone Mover
-        if(gp2DPUp) capstoneMover.setPosition(0.5);
-        if(gp2DPDown) capstoneMover.setPosition(0);
-        if(gp2RightJoystick) capstoneHolder.setPosition(0);
-        if (gp2LeftJoystick) capstoneHolder.setPosition(1);
+        if(gp2DPUp) capstoneMover.setPosition(GlobalConfig.CAPSTONE_MOVER_DROP);
+        if(gp2DPDown) capstoneMover.setPosition(GlobalConfig.CAPSTONE_MOVER_HOLD);
+        if(gp2RightJoystick) capstoneHolder.setPosition(GlobalConfig.CAPSTONE_HOLDER_UNLOCK); //unlock
+        if (gp2LeftJoystick) capstoneHolder.setPosition(GlobalConfig.CAPSTONE_HOLDER_LOCK); //lock
 
         /*if(gamepad2.y) sideClawArmPos += 0.01;
         if(gamepad2.b) sideClawArmPos -= 0.01;
