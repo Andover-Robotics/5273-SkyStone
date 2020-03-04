@@ -167,5 +167,23 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
 
         sleep(armLiftDelay);
     }
+
+    protected void throwStone(RobotAlliance currentAlliance, int armLiftDelay) {
+        if (currentAlliance == RobotAlliance.BLUE) {
+            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sleep(50);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+            sleep(500);
+            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
+        } else {
+            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sleep(50);
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+            sleep(500);
+            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
+        }
+
+        sleep(armLiftDelay);
+    }
 }
 
