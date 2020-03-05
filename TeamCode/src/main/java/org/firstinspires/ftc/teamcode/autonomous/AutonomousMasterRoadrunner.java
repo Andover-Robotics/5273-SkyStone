@@ -101,9 +101,8 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
 
     protected SkystoneLocation scanForStone() {
         skystoneDetector.setFlashLight(true);
-        SkystoneLocation skystoneLocation = skystoneDetector.getSkystoneLocation();
 
-        skystoneLocation = skystoneDetector.getSkystoneLocation();
+        SkystoneLocation skystoneLocation = skystoneDetector.getSkystoneLocation();
 
         telemetry.addLine("Scanning...");
         telemetry.addData("Skystone Location", skystoneLocation);
@@ -133,56 +132,38 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
     }
 
     protected void grabStone(RobotAlliance currentAlliance, int armLiftDelay) {
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-            sleep(1000);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
-            sleep(750);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
+        boolean blue = currentAlliance == RobotAlliance.BLUE;
+        Servo armServo = blue ? sideClawArmRight : sideClawArmLeft, fingerServo = blue ? sideClawFingerRight : sideClawFingerLeft;
 
+        armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+        sleep(250);
+        fingerServo.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+        sleep(1000);
+        armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         sleep(armLiftDelay);
     }
 
     protected void placeStone(RobotAlliance currentAlliance, int armLiftDelay) {
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(500);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(250);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(500);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
+        boolean blue = currentAlliance == RobotAlliance.BLUE;
+        Servo armServo = blue ? sideClawArmRight : sideClawArmLeft, fingerServo = blue ? sideClawFingerRight : sideClawFingerLeft;
 
+        armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+        sleep(250);
+        fingerServo.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        sleep(500);
+        armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         sleep(armLiftDelay);
     }
 
     protected void throwStone(RobotAlliance currentAlliance, int armLiftDelay) {
-        if (currentAlliance == RobotAlliance.BLUE) {
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(50);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sleep(500);
-            sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        } else {
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
-            sleep(50);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sleep(500);
-            sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        }
+        boolean blue = currentAlliance == RobotAlliance.BLUE;
+        Servo armServo = blue ? sideClawArmRight : sideClawArmLeft, fingerServo = blue ? sideClawFingerRight : sideClawFingerLeft;
 
+        armServo.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        sleep(50);
+        fingerServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+        sleep(500);
+        armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         sleep(armLiftDelay);
     }
 }
