@@ -80,14 +80,14 @@ public abstract class SampleTile2Base extends AutonomousBase {
         if (currentAlliance == RobotAlliance.RED) {
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
             sleep(500);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+            sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_CLOSE);
             sleep(1000);
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
             sleep(500);
         } else {
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
             sleep(500);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+            sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_CLOSE);
             sleep(1000);
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
             sleep(500);
@@ -102,11 +102,11 @@ public abstract class SampleTile2Base extends AutonomousBase {
         if (currentAlliance == RobotAlliance.RED) {
             sideClawArmLeft.setPosition((GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN + GlobalConfig.LEFT_SIDE_CLAW_ARM_UP) / 2);
             sleep(300);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
         } else {
             sideClawArmRight.setPosition((GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN + GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP) / 2);
             sleep(300);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN);
         }
 
         sleep(150);

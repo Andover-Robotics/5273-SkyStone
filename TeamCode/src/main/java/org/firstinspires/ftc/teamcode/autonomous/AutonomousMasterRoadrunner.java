@@ -69,13 +69,13 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
         sideClawFingerLeft = hardwareMap.servo.get("sideClawFingerLeft");
 
         sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
 
         sideClawArmRight = hardwareMap.servo.get("sideClawArmRight");
         sideClawFingerRight = hardwareMap.servo.get("sideClawFingerRight");
 
         sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN);
 
         skystoneDetector = new SkystoneDetector(hardwareMap, 330, 215, 90);
         skystoneDetector.start();
@@ -137,7 +137,7 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
 
         armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
         sleep(250);
-        fingerServo.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+        fingerServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_FINGER_CLOSE : GlobalConfig.LEFT_SIDE_CLAW_FINGER_CLOSE);
         sleep(1000);
         armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         sleep(armLiftDelay);
@@ -149,7 +149,7 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
 
         armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
         sleep(250);
-        fingerServo.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        fingerServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN : GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
         sleep(500);
         armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         sleep(armLiftDelay);
@@ -159,9 +159,9 @@ public class AutonomousMasterRoadrunner extends LinearOpMode {
         boolean blue = currentAlliance == RobotAlliance.BLUE;
         Servo armServo = blue ? sideClawArmRight : sideClawArmLeft, fingerServo = blue ? sideClawFingerRight : sideClawFingerLeft;
 
-        armServo.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        fingerServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN : GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
         sleep(50);
-        fingerServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+        armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN : GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
         sleep(500);
         armServo.setPosition(blue ? GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP : GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
         sleep(armLiftDelay);

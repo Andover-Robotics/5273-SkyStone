@@ -25,7 +25,7 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
             lastStoneLocation = swapSkystoneLocation(lastStoneLocation);
 
         // Start at tile 2, facing the building zone, against the wall
-        double startingPositionX = -48 + GlobalConfig.BOT_LENGTH_IN / 2;
+        double startingPositionX = -47.5 + GlobalConfig.BOT_LENGTH_IN / 2;
 
         driveBase.setPoseEstimate(new Pose2d(new Vector2d(startingPositionX, allianceDistanceMultiplier * (72 - GlobalConfig.BOT_WIDTH_IN / 2)), 0));
 
@@ -37,26 +37,28 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
         final double firstSkystoneX;
 
         if(lastStoneLocation == SkystoneLocation.LEFT) {
-            firstSkystoneX = -71.5 + (lastStoneLocation.getNumericalValue() * 8 + 4 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK); //(lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
+            firstSkystoneX = -75 + GlobalConfig.BOT_LENGTH_IN / 2;
         } else {
-                firstSkystoneX = -73 + (lastStoneLocation.getNumericalValue() * 8 + 4 + GlobalConfig.BOT_LENGTH_IN / 2 - GlobalConfig.BOT_CLAW_FROM_BACK); //(lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
+            firstSkystoneX = -70 + (lastStoneLocation.getNumericalValue() * 8 + 4 + GlobalConfig.BOT_LENGTH_IN / 2 - GlobalConfig.BOT_CLAW_FROM_BACK) - 3; //(lastStoneLocation == SkystoneLocation.LEFT ? 2 : 4)) + GlobalConfig.BOT_LENGTH_IN / 2;
         }
 
         Pose2d underBridge = new Pose2d(new Vector2d(6, allianceDistanceMultiplier * (46.5 - GlobalConfig.BOT_WIDTH_IN / 2)), 0);
-        double foundationPlaceY = (37 - GlobalConfig.BOT_WIDTH_IN / 2);
+        double foundationPlaceY = (35 - GlobalConfig.BOT_WIDTH_IN / 2);
 
-        final double finalSkystoneX = firstSkystoneX + 34;
+        final double finalSkystoneX = firstSkystoneX + 36;
 
         checkForStop();
 
         // DRIVE TO FIRST SKYSTONE
-        drive(bot -> bot.strafeTo(new Vector2d(firstSkystoneX, allianceDistanceMultiplier * (30 + GlobalConfig.BOT_WIDTH_IN / 2))));
+        drive(bot -> bot.strafeTo(new Vector2d(firstSkystoneX, allianceDistanceMultiplier * (27 + GlobalConfig.BOT_WIDTH_IN / 2))));
 //        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(firstSkystoneX, allianceDistanceMultiplier * (26.5 + GlobalConfig.BOT_WIDTH_IN / 2)), 0), new ConstantInterpolator(0)));
 
-        grabStone(currentAlliance, 1000);
+        grabStone(currentAlliance, 750);
+
+        drive(bot -> bot.strafeLeft(3 * allianceDistanceMultiplier));
 
         // DRIVE TO FOUNDATION TO DEPOSIT FIRST STONE
-        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(38 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK, allianceDistanceMultiplier * foundationPlaceY), 0)));
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(44 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK, allianceDistanceMultiplier * foundationPlaceY), 0)));
 
         throwStone(currentAlliance, 250);
 
@@ -84,29 +86,30 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
                 break;
         }
 
-        // DRIVE TO SECOND STONE
-        drive(bot -> bot.reverse().splineTo(underBridge).splineTo(new Pose2d(new Vector2d(finalSkystoneX, allianceDistanceMultiplier * (29.25 + GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
+        // DRIVE TO SECOND STONE`
+        drive(bot -> bot.reverse().splineTo(underBridge).splineTo(new Pose2d(new Vector2d(finalSkystoneX - 0.5, allianceDistanceMultiplier * (29.75 + GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
 
         /*if(lastStoneLocation == SkystoneLocation.LEFT){
             driveBase.turnSync(allianceDistanceMultiplier * -Math.PI/8);
         }*/
 
-        grabStone(currentAlliance, 1000);
+        grabStone(currentAlliance, 750);
 
         /*if(lastStoneLocation == SkystoneLocation.LEFT){
             driveBase.turnSync(allianceDistanceMultiplier * Math.PI/8);
         }*/
 
         // DRIVE TO FOUNDATION TO DEPOSIT SECOND STONE
-        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(32 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK, allianceDistanceMultiplier * foundationPlaceY), 0)));
+        drive(bot -> bot.splineTo(underBridge).splineTo(new Pose2d(new Vector2d(34 + GlobalConfig.BOT_LENGTH_IN/2 - GlobalConfig.BOT_CLAW_FROM_BACK, allianceDistanceMultiplier * foundationPlaceY), 0)));
 
         throwStone(currentAlliance, 250);
 
         // Close left finger to allow wire train to move when slides go up
-        sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_CLOSE);
+        sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_CLOSE);
 
-        setLiftPower(.65);
-        driveBase.turnSync(allianceDistanceMultiplier * -Math.PI / 2);
+        drive(bot -> bot.forward(8));
+        setLiftPower(.50);
+        driveBase.turnSync(allianceDistanceMultiplier * - Math.PI / 2);
         holdLiftLocation();
 
         drive(bot -> bot.forward(4));
@@ -116,26 +119,27 @@ public abstract class RoadrunnerSampleTile2Base extends AutonomousBaseRoadrunner
 
         sleep(500);
 
-        drive(bot -> bot.back(24));
+        //drive(bot -> bot.back(55));
 
-        driveBase.turnSync(allianceDistanceMultiplier * 3 * Math.PI/4);
+        driveBase.turnSync(allianceDistanceMultiplier * Math.PI);
 
         //drive(bot -> bot.forward(8));
-
-        setLiftPower(0.0035);
 
         foundationServoLeft.setPosition(GlobalConfig.FOUNDATION_SERVO_LEFT_UP);
         foundationServoRight.setPosition(GlobalConfig.FOUNDATION_SERVO_RIGHT_UP);
 
-
-        drive(bot -> bot.reverse().splineTo(underBridge));
+        drive(bot -> bot.strafeRight(40 * allianceDistanceMultiplier));
+        setLiftPower(0.0025);
+        drive(bot -> bot.splineTo(new Pose2d(new Vector2d(6, allianceDistanceMultiplier * (50 - GlobalConfig.BOT_WIDTH_IN / 2)), 0)));
         setLiftPower(0);
         switch(currentAlliance) {
             case RED:
                 sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
+                sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OUT);
                 break;
             case BLUE:
                 sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
+                sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OUT);
                 break;
         }
     }

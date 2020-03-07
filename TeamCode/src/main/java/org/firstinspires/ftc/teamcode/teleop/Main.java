@@ -115,18 +115,18 @@ public class Main extends OpMode {
         sideClawFingerRight = hardwareMap.servo.get("sideClawFingerRight");
 
         sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-        sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
 
         sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-        sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+        sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN);
 
         capstoneMover = hardwareMap.servo.get("capstoneMover");
 
-        capstoneMover.setPosition(0);
+        capstoneMover.setPosition(GlobalConfig.CAPSTONE_MOVER_HOLD);
 
         capstoneHolder = hardwareMap.servo.get("capstoneHolder");
 
-        capstoneHolder.setPosition(1);
+        capstoneHolder.setPosition(GlobalConfig.CAPSTONE_HOLDER_LOCK);
 
         leftArmOpen = true;
         leftFingerOpen = true;
@@ -142,9 +142,9 @@ public class Main extends OpMode {
 
         if (gp1Start) {
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_UP);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_UP);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN);
 
             leftArmOpen = true;
             leftFingerOpen = true;
@@ -158,7 +158,7 @@ public class Main extends OpMode {
         }
 
         if (gp2Y) {
-            sideClawFingerLeft.setPosition(leftFingerOpen ? GlobalConfig.SIDE_CLAW_FINGER_CLOSE : GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawFingerLeft.setPosition(leftFingerOpen ? GlobalConfig.LEFT_SIDE_CLAW_FINGER_CLOSE : GlobalConfig.LEFT_SIDE_CLAW_FINGER_OPEN);
             leftFingerOpen = !leftFingerOpen;
         }
 
@@ -168,20 +168,20 @@ public class Main extends OpMode {
         }
 
         if (gp2A) {
-            sideClawFingerRight.setPosition(rightFingerOpen ? GlobalConfig.SIDE_CLAW_FINGER_CLOSE : GlobalConfig.SIDE_CLAW_FINGER_OPEN);
+            sideClawFingerRight.setPosition(rightFingerOpen ? GlobalConfig.RIGHT_SIDE_CLAW_FINGER_CLOSE : GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OPEN);
             rightFingerOpen = !rightFingerOpen;
         }
 
         if(gp2RightBumper) {
             sideClawArmRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_ARM_DOWN);
-            sideClawFingerRight.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OUT);
+            sideClawFingerRight.setPosition(GlobalConfig.RIGHT_SIDE_CLAW_FINGER_OUT);
             rightArmOpen = false;
             rightFingerOpen = false;
         }
 
         if(gp2LeftBumper) {
             sideClawArmLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_ARM_DOWN);
-            sideClawFingerLeft.setPosition(GlobalConfig.SIDE_CLAW_FINGER_OUT);
+            sideClawFingerLeft.setPosition(GlobalConfig.LEFT_SIDE_CLAW_FINGER_OUT);
             leftArmOpen = false;
             leftFingerOpen = false;
         }

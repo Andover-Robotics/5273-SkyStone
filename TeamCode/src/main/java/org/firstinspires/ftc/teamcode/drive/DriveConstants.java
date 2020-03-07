@@ -67,7 +67,7 @@ public class DriveConstants {
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
             45.0, 30.0, 0,
-            Math.PI, Math.PI, 0
+            2*Math.PI, Math.PI, 0
     );
 
 
